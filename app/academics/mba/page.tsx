@@ -1,0 +1,12 @@
+import {PageHero} from '@/components/page-hero';import {getSpecializations} from '@/lib/api';
+export default async function MBA(){const specializations=await getSpecializations();return <main>
+<PageHero kicker="Academics / MBA" title="Management education with breadth, depth and direction." body="A postgraduate, two-year full-time MBA affiliated with Savitribai Phule Pune University."/>
+<section className="mx-auto max-w-7xl px-5 py-20">
+  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[['Duration','2 years'],['Mode','Full time'],['Intake','120 seats'],['Pattern','Semester']].map(x=><div className="rounded-2xl bg-mist p-6" key={x[0]}><p className="text-xs text-slate-400">{x[0]}</p><p className="mt-2 text-xl font-extrabold text-navy">{x[1]}</p></div>)}</div>
+  <p className="mt-6 text-sm text-slate-500">Delivered at the Sangamner College campus, Pune–Nashik Highway (NH-50), Sangamner. Approved by AICTE, DTE Maharashtra and affiliated to Savitribai Phule Pune University.</p>
+
+  <div id="specialisations" className="mt-20"><p className="eyebrow">Functional areas</p><h2 className="display mt-4 text-4xl text-navy">Five ways to shape your MBA.</h2><p className="mt-4 max-w-2xl text-sm leading-7 text-slate-500">Students choose their functional specialisation from the second semester, with the option of a major and a minor specialisation based on preference.</p><div className="mt-10 grid gap-4 md:grid-cols-2">{specializations.map((s,i)=><article key={s.slug} className="rounded-3xl border p-7"><span className="text-xs font-black text-gold">0{i+1}</span><h3 className="mt-4 text-xl font-bold text-navy">{s.name}</h3><p className="mt-3 text-sm text-slate-500">{s.description}</p></article>)}</div><p className="mt-8 rounded-xl bg-amber-50 p-5 text-xs leading-6 text-amber-900">Specialisations are offered subject to industry needs, faculty strength and competencies, and student demand — a specialisation with fewer than 20% student enrolment may not be offered in a given year.</p></div>
+
+  <div className="mt-20"><p className="eyebrow">Programme philosophy</p><h2 className="display mt-4 max-w-2xl text-4xl text-navy">Rigorous academics, real industry exposure.</h2><p className="mt-5 max-w-3xl text-sm leading-8 text-slate-500">Alongside the classroom curriculum, the programme emphasises networking events, internships and industry partnerships to give students practical exposure and support their holistic development.</p></div>
+</section>
+</main>}

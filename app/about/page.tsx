@@ -1,0 +1,14 @@
+import {PageHero} from '@/components/page-hero';import {getAboutPage,mediaUrl} from '@/lib/api';import Image from 'next/image';
+export default async function About(){const a=await getAboutPage();const chairmanPhoto=mediaUrl(a?.chairmanPhoto);return <main>
+<PageHero kicker="About" title="A six-decade commitment to access, excellence and progress." body="Shikshan Prasarak Sanstha was established to bring higher education within reach of rural communities around Sangamner."/>
+
+<section className="mx-auto max-w-7xl px-5 py-24"><div className="grid gap-14 lg:grid-cols-2"><div><p className="eyebrow">{a?.foundationEyebrow}</p><h2 className="display mt-4 text-4xl text-navy">{a?.foundationTitle}</h2></div><div className="space-y-5 text-sm leading-8 text-slate-600">{a?.foundationBody?.split('\n\n').map((p,i)=><p key={i}>{p}</p>)}</div></div><div className="mt-20 grid gap-4 md:grid-cols-3">{(a?.timeline??[]).map(({year,text})=><article className="rounded-3xl bg-mist p-8" key={year}><b className="display text-5xl text-blue">{year}</b><p className="mt-6 text-sm leading-6 text-slate-600">{text}</p></article>)}</div></section>
+
+<section className="bg-navy py-24 text-white"><div className="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-2"><div><p className="eyebrow !text-gold">{a?.missionEyebrow}</p><h2 className="display mt-4 text-4xl">{a?.missionTitle}</h2></div><div className="space-y-5 text-sm leading-8 text-white/70"><p>{a?.missionBody}</p><p className="display text-2xl italic text-gold">&ldquo;{a?.missionQuote}&rdquo;</p></div></div></section>
+
+<section id="vision" className="bg-gold py-24"><div className="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-2"><div><p className="eyebrow !text-navy/50">Vision statement</p><h2 className="display mt-4 text-5xl text-navy">&ldquo;Spread Knowledge Unto the Last&rdquo;</h2></div><p className="text-sm leading-8 text-navy/70">{a?.visionBody}</p></div></section>
+
+<section id="chairman" className="mx-auto max-w-7xl px-5 py-24"><p className="eyebrow">Chairman&rsquo;s message</p><div className="mt-8 grid gap-10 lg:grid-cols-[280px_1fr] lg:items-start"><div className="relative h-[340px] overflow-hidden rounded-3xl bg-mist">{chairmanPhoto&&<Image src={chairmanPhoto} alt={a?.chairmanName||'Chairman'} fill sizes="280px" className="object-contain"/>}</div><div><p className="display text-3xl italic leading-snug text-navy">&ldquo;{a?.chairmanQuote}&rdquo;</p><p className="mt-6 text-sm leading-8 text-slate-600">{a?.chairmanBody}</p><p className="mt-8 text-sm font-bold text-navy">{a?.chairmanName}</p><p className="text-xs text-slate-400">{a?.chairmanTitle}</p></div></div></section>
+
+<section className="bg-mist py-16"><div className="mx-auto max-w-7xl px-5 text-center"><p className="text-xs text-slate-500">{a?.approvalsNote}</p></div></section>
+</main>}

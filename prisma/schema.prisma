@@ -1,0 +1,279 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Admin backend login ----------
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+}
+
+// ---------- Global site settings (singleton, id 1) ----------
+model SiteSetting {
+  id                   Int          @id @default(1)
+  instituteName        String?
+  shortName            String?
+  tagline              String?
+  logoUrl              String?
+  faviconUrl           String?
+  phone                String?
+  email                String?
+  address              String?      @db.Text
+  footerText           String?      @db.Text
+  topBarAddress        String?
+  admissionsStatusLine String?
+  metaTitle            String?
+  metaDescription      String?      @db.Text
+  keywords             String?
+  socialLinks          SocialLink[]
+}
+
+model SocialLink {
+  id            Int         @id @default(autoincrement())
+  platform      String
+  url           String
+  order         Int         @default(0)
+  siteSettingId Int
+  siteSetting   SiteSetting @relation(fields: [siteSettingId], references: [id], onDelete: Cascade)
+}
+
+// ---------- Navigation ----------
+model NavigationItem {
+  id           Int     @id @default(autoincrement())
+  label        String
+  href         String
+  order        Int     @default(0)
+  openInNewTab Boolean @default(false)
+  footerGroup  String? // null = main header nav item
+}
+
+model QuickLink {
+  id     Int     @id @default(autoincrement())
+  label  String
+  href   String
+  order  Int     @default(0)
+  active Boolean @default(true)
+}
+
+// ---------- Academics ----------
+model Specialization {
+  id          Int     @id @default(autoincrement())
+  name        String
+  slug        String  @unique
+  description String? @db.Text
+  order       Int     @default(0)
+  active      Boolean @default(true)
+}
+
+model Facility {
+  id                Int     @id @default(autoincrement())
+  title             String
+  slug              String  @unique
+  shortDescription  String?
+  description       String? @db.Text
+  order             Int     @default(0)
+  active            Boolean @default(true)
+}
+
+model Faculty {
+  id             Int     @id @default(autoincrement())
+  name           String
+  slug           String  @unique
+  photoUrl       String?
+  designation    String?
+  qualification  String? @db.Text
+  experience     String?
+  specialization String?
+  order          Int     @default(0)
+  active         Boolean @default(true)
+}
+
+model Testimonial {
+  id       Int     @id @default(autoincrement())
+  name     String
+  role     String?
+  company  String?
+  photoUrl String?
+  quote    String? @db.Text
+  type     String  @default("Alumni")
+  featured Boolean @default(false)
+  order    Int     @default(0)
+}
+
+// ---------- Documents / notices ----------
+model DocumentFile {
+  id           Int      @id @default(autoincrement())
+  title        String
+  category     String
+  academicYear String?
+  fileUrl      String
+  featured     Boolean  @default(false)
+  published    Boolean  @default(true)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+// ---------- Gallery ----------
+model GalleryAlbum {
+  id            Int            @id @default(autoincrement())
+  title         String
+  slug          String         @unique
+  coverImageUrl String?
+  eventDate     DateTime?
+  category      String?
+  featured      Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  photos        GalleryPhoto[]
+}
+
+model GalleryPhoto {
+  id      Int          @id @default(autoincrement())
+  url     String
+  order   Int          @default(0)
+  albumId Int
+  album   GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+}
+
+// ---------- Admissions ----------
+model Admission {
+  id                  Int      @id @default(autoincrement())
+  academicYear        String   @unique
+  instituteCode       String?
+  eligibilityGeneral  String?
+  eligibilityReserved String?
+  cetCellUrl          String?
+  notes               String?  @db.Text
+  steps               Json?
+  documentsRequired   Json?
+  active              Boolean  @default(true)
+}
+
+model AdmissionEnquiry {
+  id             Int      @id @default(autoincrement())
+  name           String
+  mobile         String
+  email          String
+  city           String?
+  graduation     String?
+  percentage     Decimal? @db.Decimal(5, 2)
+  cetStatus      String?
+  specialization String?
+  message        String?  @db.Text
+  status         String   @default("New")
+  source         String   @default("Website")
+  createdAt      DateTime @default(now())
+}
+
+// ---------- IQAC ----------
+model Iqac {
+  id                    Int     @id @default(autoincrement())
+  academicYear          String  @unique
+  objectives            Json?
+  functionsDescription  String? @db.Text
+  active                Boolean @default(true)
+}
+
+// ---------- Placements page (singleton, id 1) ----------
+model PlacementsPage {
+  id           Int     @id @default(1)
+  processSteps Json?
+  policyRules  Json?
+  prepTitle    String?
+  prepBody     String? @db.Text
+  disclaimer   String? @db.Text
+}
+
+// ---------- About page (singleton, id 1) ----------
+model AboutPage {
+  id                Int            @id @default(1)
+  foundationEyebrow String?
+  foundationTitle   String?
+  foundationBody    String?        @db.Text
+  missionEyebrow    String?
+  missionTitle      String?
+  missionBody       String?        @db.Text
+  missionQuote      String?        @db.Text
+  visionBody        String?        @db.Text
+  chairmanQuote     String?        @db.Text
+  chairmanBody      String?        @db.Text
+  chairmanName      String?
+  chairmanTitle     String?
+  chairmanPhotoUrl  String?
+  approvalsNote     String?        @db.Text
+  timeline          TimelineItem[]
+}
+
+model TimelineItem {
+  id          Int       @id @default(autoincrement())
+  year        String
+  text        String
+  order       Int       @default(0)
+  aboutPageId Int
+  aboutPage   AboutPage @relation(fields: [aboutPageId], references: [id], onDelete: Cascade)
+}
+
+// ---------- Homepage ----------
+model HeroSlide {
+  id          Int     @id @default(autoincrement())
+  imageUrl    String
+  eyebrow     String?
+  title       String
+  accent      String?
+  copy        String? @db.Text
+  buttonLabel String?
+  buttonHref  String?
+  order       Int     @default(0)
+}
+
+model PhotoCaption {
+  id       Int     @id @default(autoincrement())
+  imageUrl String
+  caption  String?
+  order    Int     @default(0)
+}
+
+model HomepagePopup {
+  id          Int       @id @default(1)
+  enabled     Boolean   @default(false)
+  title       String?
+  message     String?   @db.Text
+  imageUrl    String?
+  buttonLabel String?
+  buttonHref  String?
+  startDate   DateTime?
+  endDate     DateTime?
+  updatedAt   DateTime  @updatedAt
+}
+
+// ---------- News & events ----------
+model News {
+  id            Int       @id @default(autoincrement())
+  title         String
+  slug          String    @unique
+  summary       String?   @db.Text
+  body          String?   @db.Text
+  coverImageUrl String?
+  publishedDate DateTime?
+  featured      Boolean   @default(false)
+}
+
+model Event {
+  id            Int       @id @default(autoincrement())
+  title         String
+  slug          String    @unique
+  description   String?   @db.Text
+  coverImageUrl String?
+  gallery       Json?
+  startDate     DateTime?
+  endDate       DateTime?
+  venue         String?
+  featured      Boolean   @default(false)
+}
