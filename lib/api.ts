@@ -13,6 +13,8 @@ import {
   alumni as ALUMNI,
   documents as DOCUMENTS,
   galleryAlbums as GALLERY_ALBUMS,
+  cdcMembers as CDC_MEMBERS,
+  quickLinks as QUICK_LINKS,
 } from './content';
 
 export function mediaUrl(url?: string | null): string | null {
@@ -28,7 +30,7 @@ export async function getNavigation(): Promise<NavItem[]> {
 // ---------- Quick links ----------
 export type QuickLink = { label: string; href: string; order: number };
 export async function getQuickLinks(): Promise<QuickLink[]> {
-  return [];
+  return QUICK_LINKS.map((q, order) => ({ ...q, order }));
 }
 
 export type FooterGroup = { group: string; items: { label: string; href: string }[] };
@@ -39,6 +41,7 @@ const FOOTER_GROUPS: FooterGroup[] = [
       { label: 'About us', href: '/about' },
       { label: 'Vision & mission', href: '/about#vision' },
       { label: "Chairman's message", href: '/about#chairman' },
+      { label: 'College Development Committee', href: '/committees/college-development-committee' },
       { label: 'Contact', href: '/contact' },
     ],
   },
@@ -206,6 +209,12 @@ export async function getDocumentsGrouped(): Promise<DocGroup[]> {
     }
   }
   return DOCUMENT_CATEGORY_ORDER.map((c) => groups.get(c)).filter((g): g is DocGroup => !!g);
+}
+
+// ---------- College Development Committee ----------
+export type CdcMember = { name: string; role: string };
+export async function getCdcMembers(): Promise<CdcMember[]> {
+  return CDC_MEMBERS;
 }
 
 // ---------- Gallery albums ----------

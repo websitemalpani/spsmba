@@ -1,5 +1,17 @@
 export const nav=[{label:'Home',href:'/'},{label:'About',href:'/about'},{label:'Academics',href:'/academics/mba'},{label:'Admissions',href:'/admissions'},{label:'Faculty',href:'/faculty'},{label:'Placements',href:'/placements'},{label:'Campus',href:'/campus/facilities'},{label:'IQAC',href:'/iqac'},{label:'Notices',href:'/notices'},{label:'Gallery',href:'/gallery'},{label:'Contact',href:'/contact'}];
 
+export const quickLinks=[
+  {label:'Admissions',href:'/admissions'},
+  {label:'Fee Structure',href:'/fees'},
+  {label:'Notices',href:'/notices'},
+  {label:'IQAC',href:'/iqac'},
+  {label:'Faculty',href:'/faculty'},
+  {label:'Placements',href:'/placements'},
+  {label:'Gallery',href:'/gallery'},
+  {label:'Anti-Ragging',href:'/committees/anti-ragging'},
+  {label:'Contact',href:'/contact'}
+];
+
 export const specializations=[['Marketing Management','Build brands, understand markets and create customer value.'],['Financial Management','Develop analytical judgement for financial decisions.'],['Human Resource Management','Lead people, culture and organisational performance.'],['Operations & Supply Chain','Design resilient systems from sourcing to delivery.'],['Business Analytics','Turn business data into clear, confident decisions.']];
 
 export const facilities=[
@@ -11,9 +23,9 @@ export const facilities=[
 
 export const faculty=[
   {name:'Dr. Nitin R. Zaware',role:'Director',qual:'M.Com, M.P.M., MBA, M.Phil, Ph.D., NET',exp:'28 years',focus:'Management',photo:'/uploads/2025/07/8fd38ab3-f8c8-401c-82b2-71d508883fce-300x300.webp'},
-  {name:'Dr. Kiran D. Gonte',role:'Professor',qual:'B.Sc, MBA, Ph.D.',exp:'16 years',focus:'Marketing Management',photo:'/uploads/2025/07/imgi_20_Dr.-Kiran.webp'},
-  {name:'Dr. Neha P. Shah',role:'Associate Professor',qual:'M.Com, MBA (Finance), Ph.D., SET',exp:'15 years',focus:'Financial Management',photo:'/images/faculty/dr-neha-p-shah.webp'},
-  {name:'Dr. Viddesh B. Andure',role:'Associate Professor',qual:'LL.B., MBA (HRM), NET, Ph.D.',exp:'15 years',focus:'Human Resource Management',photo:'/images/faculty/dr-viddesh-b-andure.webp'},
+  {name:'Dr. Kiran D. Gonte',role:'Associate Professor',qual:'B.Sc, MBA, Ph.D.',exp:'16 years',focus:'Marketing Management',photo:'/uploads/2025/07/imgi_20_Dr.-Kiran.webp'},
+  {name:'Dr. Neha P. Shah',role:'Assistant Professor',qual:'M.Com, MBA (Finance), Ph.D., SET',exp:'15 years',focus:'Financial Management',photo:'/images/faculty/dr-neha-p-shah.webp'},
+  {name:'Dr. Viddesh B. Andure',role:'Assistant Professor',qual:'LL.B., MBA (HRM), NET, Ph.D.',exp:'15 years',focus:'Human Resource Management',photo:'/images/faculty/dr-viddesh-b-andure.webp'},
   {name:'Mr. Santosh B. Khamkar',role:'Assistant Professor',qual:'B.Sc., MBA (Marketing), Ph.D. pursuing',exp:'16 years',focus:'Marketing Management',photo:'/uploads/2025/07/imgi_22_Mr.-Santosh-300x300.webp'},
   {name:'Mrs. Pratima A. Gade',role:'Assistant Professor',qual:'B.Sc. CS, M.Sc. CS, MBA (IT), Ph.D. pursuing',exp:'14 years',focus:'IT & Business Analytics',photo:'/images/faculty/mrs-pratima-a-gade.webp'},
   {name:'Mrs. Vaishali S. Nawale',role:'Assistant Professor',qual:'B.Sc., MBA (HR, IB), Ph.D. pursuing',exp:'8 years (6 industry, 2 academic)',focus:'HR & International Business',photo:'/uploads/2025/07/imgi_26_Vaishali-N.-Chaudhari-300x300.webp'},
@@ -46,7 +58,12 @@ export const documents=[
     {title:'DTE Permission Letter',href:'/uploads/2024/02/DTE-permission-Letter.pdf'},
     {title:'Government of Maharashtra Permission Letter',href:'/uploads/2024/02/MBA-Goverment-of-Maharashtra-Permission-Letter.pdf'},
     {title:'AICTE EOA Report 2024–25',href:'/uploads/2025/10/AICTE-EOA-REPORT-2024-2025.pdf'},
-    {title:'Mandatory Disclosure 2025',href:'/uploads/2025/10/Mandatory-Disclosure-2025-SPSMBA.pdf'}
+    {title:'Mandatory Disclosure 2025',href:'/uploads/2025/10/Mandatory-Disclosure-2025-SPSMBA.pdf'},
+    {title:'Affiliation Letter 2026–27 (MBA)',href:'/pdf/Affiliation%20Letter%202026-27%20MBA.pdf'},
+    {title:'MCA SPPU Affiliation 2026–27',href:'/pdf/MCA%20SPPU%20Affiliation%202026-27.pdf'},
+    {title:'MCA Government Resolution (GR)',href:'/pdf/MCA%20GR%20202606121800073408.pdf'},
+    {title:'AICTE EOA Report 2026–27',href:'/pdf/EOA%20Report%2026-27.PDF'},
+    {title:'Research Centre',href:'/pdf/Research%20Centre.pdf'}
   ]},
   {category:'Admissions',items:[
     {title:'Admission Notification 2026–27 (ACAP Seats)',href:'/uploads/2026/09/Admission-Notification-2026-27-ACAP-Seats.pdf'},
@@ -78,6 +95,23 @@ export const documents=[
     {title:'Social Media Cell',href:'/uploads/2025/10/SOCIAL-MEDIA-CELL.pdf'},
     {title:'Internal Innovation Council (IIC)',href:'/uploads/2025/10/IIC.pdf'}
   ]}
+];
+
+export const cdcMembers=[
+  {name:'Dr. Sanjay Omkarnath Malpani',role:'Chairman'},
+  {name:'Dr. Rajendra Shankarlal Laddha',role:'Secretary'},
+  {name:'Shri. Sandip Dattatray Chothave',role:'Member'},
+  {name:'Shri. Shrihari Arunkumar Navandar',role:'Member'},
+  {name:'Shri. Satvik Amit Pandit',role:'Member'},
+  {name:'Shri. Rushikesh Nandanmal Bafna',role:'Member'},
+  {name:'Shri. Rupesh Sampat Walzade',role:'Member'},
+  {name:'Dr. Kiran Dnyaneshwar Gonte',role:'Member'},
+  {name:'Dr. Neha Prafullkumar Shah',role:'Member'},
+  {name:'Dr. Viddesh Bhaskar Andure',role:'Member'},
+  {name:'Prof. Santosh Bhausaheb Khamkar',role:'Member'},
+  {name:'Shri. Sandip Gorakashanath Malwade',role:'Member'},
+  {name:'Yash Sabban',role:'Student Representative'},
+  {name:'Vrushali Bahirat',role:'Student Representative'}
 ];
 
 export const activities=['Aptitude Test','Extempore Competition','Group Discussion','Business Quiz','Presentations','Poster Presentation','Debate Competition','Case Study / Situation Analysis','Field Visits','Small Group Project','Role Play','Industry Analysis','Book Review','ET Newspaper Reading','Essay Writing','Computer Competency','Employability Enhancement Module','Resume Building','Mock Interviews','Cultural Activities','Sports Activities'];
