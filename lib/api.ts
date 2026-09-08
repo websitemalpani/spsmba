@@ -1,55 +1,38 @@
-// Server-only data access boundary — backed directly by MySQL via Prisma
-// (this app has no separate CMS to talk to). Every function here fails soft:
-// if the database is unreachable, reads return empty/null instead of
-// throwing, so a DB hiccup never takes the whole site down.
-import { prisma } from './db';
-import { nav as FALLBACK_NAV } from './content';
+// Server-only data access boundary — now backed entirely by static content
+// (no database, no CMS). Every function keeps the exact same name/signature/
+// return shape it had when it queried Prisma, so every page and component is
+// unchanged. Source content lives in `lib/content.ts`; a few sections that
+// only ever had one record (site settings, about page, admissions, IQAC,
+// placements, homepage sections) are defined here as literals.
+import { slugify } from './slugify';
+import {
+  nav as NAV,
+  specializations as SPECIALIZATIONS,
+  facilities as FACILITIES,
+  faculty as FACULTY,
+  alumni as ALUMNI,
+  documents as DOCUMENTS,
+  galleryAlbums as GALLERY_ALBUMS,
+} from './content';
 
 export function mediaUrl(url?: string | null): string | null {
   return url || null;
 }
 
-async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
-  try {
-    return await fn();
-  } catch (e) {
-    console.error('DB read failed:', e);
-    return fallback;
-  }
-}
-
 // ---------- Navigation ----------
 export type NavItem = { label: string; href: string; order: number };
 export async function getNavigation(): Promise<NavItem[]> {
-  const items = await safe(
-    () =>
-      prisma.navigationItem.findMany({
-        where: { footerGroup: null },
-        orderBy: { order: 'asc' },
-        select: { label: true, href: true, order: true },
-      }),
-    []
-  );
-  return items.length > 0 ? items : FALLBACK_NAV.map((n, order) => ({ ...n, order }));
+  return NAV.map((n, order) => ({ ...n, order }));
 }
 
 // ---------- Quick links ----------
 export type QuickLink = { label: string; href: string; order: number };
 export async function getQuickLinks(): Promise<QuickLink[]> {
-  return safe(
-    () =>
-      prisma.quickLink.findMany({
-        where: { active: true },
-        orderBy: { order: 'asc' },
-        select: { label: true, href: true, order: true },
-      }),
-    []
-  );
+  return [];
 }
 
-const FOOTER_GROUP_ORDER = ['Institute', 'Academics', 'Admissions', 'Students'];
 export type FooterGroup = { group: string; items: { label: string; href: string }[] };
-const FALLBACK_FOOTER_GROUPS: FooterGroup[] = [
+const FOOTER_GROUPS: FooterGroup[] = [
   {
     group: 'Institute',
     items: [
@@ -88,23 +71,7 @@ const FALLBACK_FOOTER_GROUPS: FooterGroup[] = [
   },
 ];
 export async function getFooterNavigation(): Promise<FooterGroup[]> {
-  const items = await safe(
-    () =>
-      prisma.navigationItem.findMany({
-        where: { footerGroup: { not: null } },
-        orderBy: { order: 'asc' },
-        select: { label: true, href: true, footerGroup: true },
-      }),
-    []
-  );
-  if (items.length === 0) return FALLBACK_FOOTER_GROUPS;
-  const groups = new Map<string, FooterGroup>();
-  for (const item of items) {
-    const group = item.footerGroup!;
-    if (!groups.has(group)) groups.set(group, { group, items: [] });
-    groups.get(group)!.items.push({ label: item.label, href: item.href });
-  }
-  return FOOTER_GROUP_ORDER.map((g) => groups.get(g)).filter((g): g is FooterGroup => !!g);
+  return FOOTER_GROUPS;
 }
 
 // ---------- Site settings ----------
@@ -123,57 +90,52 @@ export type SiteSettings = {
   socialLinks?: { platform: string; url: string }[];
   seo?: { metaTitle?: string | null; metaDescription?: string | null; keywords?: string | null };
 };
+const SITE_SETTINGS: SiteSettings = {
+  instituteName: "Shikshan Prasarak Sanstha's M.B.A. Institute",
+  shortName: 'SPS MBA Institute',
+  tagline: 'Spread Knowledge Unto the Last',
+  phone: '(02425) 223181',
+  email: 'info@spsmba.edu.in',
+  address: 'Ghulewadi, Pune–Nashik Highway (NH-50), Sangamner, District Ahmednagar – 422605, Maharashtra',
+  footerText: `© ${new Date().getFullYear()} SPS MBA Institute. All rights reserved.`,
+  topBarAddress: 'Sangamner College Campus, Ghulewadi, Sangamner – 422605',
+  admissionsStatusLine: 'MBA admissions 2026–27 open',
+  logo: null,
+  favicon: null,
+  socialLinks: [
+    {
+      platform: 'Facebook',
+      url: 'https://www.facebook.com/people/Sps-Mba-Sangamner/pfbid0aYJhnqX6bxJuhHbNrYsKRyCPVzRbBGtVtpzoh4fD4PmLkyoEa4durSixtngaE36yl/',
+    },
+    { platform: 'Instagram', url: 'https://www.instagram.com/spsmbainstitute/' },
+    { platform: 'YouTube', url: 'https://www.youtube.com/channel/UC8erfKdVDhEQN4VbIMjb5hg' },
+  ],
+  seo: {
+    metaTitle: 'SPS MBA Institute, Sangamner',
+    metaDescription: 'A modern management institute affiliated with Savitribai Phule Pune University.',
+    keywords: 'SPS MBA, MBA Sangamner, Shikshan Prasarak Sanstha, MBA Institute Maharashtra',
+  },
+};
 export async function getSiteSettings(): Promise<SiteSettings | null> {
-  return safe(async () => {
-    const s = await prisma.siteSetting.findUnique({
-      where: { id: 1 },
-      include: { socialLinks: { orderBy: { order: 'asc' } } },
-    });
-    if (!s) return null;
-    return {
-      instituteName: s.instituteName,
-      shortName: s.shortName,
-      tagline: s.tagline,
-      phone: s.phone,
-      email: s.email,
-      address: s.address,
-      footerText: s.footerText,
-      topBarAddress: s.topBarAddress,
-      admissionsStatusLine: s.admissionsStatusLine,
-      logo: s.logoUrl,
-      favicon: s.faviconUrl,
-      socialLinks: s.socialLinks.map((l) => ({ platform: l.platform, url: l.url })),
-      seo: { metaTitle: s.metaTitle, metaDescription: s.metaDescription, keywords: s.keywords },
-    };
-  }, null);
+  return SITE_SETTINGS;
 }
 
 // ---------- Specializations ----------
 export type Specialization = { name: string; slug: string; description?: string | null; order: number };
 export async function getSpecializations(): Promise<Specialization[]> {
-  return safe(
-    () =>
-      prisma.specialization.findMany({
-        where: { active: true },
-        orderBy: { order: 'asc' },
-        select: { name: true, slug: true, description: true, order: true },
-      }),
-    []
-  );
+  return SPECIALIZATIONS.map(([name, description], order) => ({ name, slug: slugify(name), description, order }));
 }
 
 // ---------- Facilities ----------
 export type Facility = { title: string; slug: string; shortDescription?: string | null; description?: string | null; order: number };
 export async function getFacilities(): Promise<Facility[]> {
-  return safe(
-    () =>
-      prisma.facility.findMany({
-        where: { active: true },
-        orderBy: { order: 'asc' },
-        select: { title: true, slug: true, shortDescription: true, description: true, order: true },
-      }),
-    []
-  );
+  return FACILITIES.map((f, order) => ({
+    title: f.title,
+    slug: slugify(f.title),
+    shortDescription: f.tag,
+    description: f.text,
+    order,
+  }));
 }
 
 // ---------- Faculty ----------
@@ -188,23 +150,15 @@ export type Faculty = {
   order: number;
 };
 export async function getFaculty(): Promise<Faculty[]> {
-  const rows = await safe(
-    () =>
-      prisma.faculty.findMany({
-        where: { active: true },
-        orderBy: { order: 'asc' },
-      }),
-    []
-  );
-  return rows.map((f) => ({
+  return FACULTY.map((f, order) => ({
     name: f.name,
-    slug: f.slug,
-    designation: f.designation,
-    qualification: f.qualification,
-    experience: f.experience,
-    specialization: f.specialization,
-    photo: f.photoUrl,
-    order: f.order,
+    slug: slugify(f.name),
+    designation: f.role,
+    qualification: f.qual,
+    experience: f.exp,
+    specialization: f.focus,
+    photo: f.photo ?? null,
+    order,
   }));
 }
 
@@ -218,56 +172,48 @@ export type Testimonial = {
   order: number;
 };
 export async function getTestimonials(type?: string): Promise<Testimonial[]> {
-  const rows = await safe(
-    () =>
-      prisma.testimonial.findMany({
-        where: type ? { type } : undefined,
-        orderBy: { order: 'asc' },
-      }),
-    []
-  );
-  return rows.map((t) => ({ name: t.name, role: t.role, company: t.company, photo: t.photoUrl, type: t.type, order: t.order }));
+  const rows = ALUMNI.map((a, order) => ({
+    name: a.name,
+    role: a.role,
+    company: a.company,
+    photo: a.photo ?? null,
+    type: 'Alumni',
+    order,
+  }));
+  return type ? rows.filter((r) => r.type === type) : rows;
 }
 
-// ---------- Documents, grouped by category (mirrors the old static content shape) ----------
+// ---------- Documents, grouped by category ----------
 export type DocGroup = { category: string; items: { title: string; href: string; featured: boolean }[] };
 const DOCUMENT_CATEGORY_ORDER = ['Approvals & Affiliation', 'Admissions', 'Fees', 'IQAC', 'Committees'];
+const DOCUMENT_CATEGORY_MAP: Record<string, string> = {
+  'Approvals & Affiliation': 'Approvals & Affiliation',
+  Admissions: 'Admissions',
+  Fees: 'Fees',
+  IQAC: 'IQAC',
+  'Committees 2025–26': 'Committees',
+};
 
 export async function getDocumentsGrouped(): Promise<DocGroup[]> {
-  const docs = await safe(
-    () =>
-      prisma.documentFile.findMany({
-        where: { published: true },
-        orderBy: [{ category: 'asc' }, { order: 'asc' }],
-      }),
-    []
-  );
-
   const groups = new Map<string, DocGroup>();
-  for (const d of docs) {
-    if (!d.fileUrl) continue;
-    const label = d.academicYear ? `${d.category} ${d.academicYear}` : d.category;
-    if (!groups.has(d.category)) groups.set(d.category, { category: label, items: [] });
-    groups.get(d.category)!.items.push({ title: d.title, href: d.fileUrl, featured: !!d.featured });
+  for (const group of DOCUMENTS) {
+    const category = DOCUMENT_CATEGORY_MAP[group.category] || 'Approvals & Affiliation';
+    const academicYear = group.category.match(/\d{4}.\d{2,4}/)?.[0];
+    const label = academicYear ? `${category} ${academicYear}` : category;
+    if (!groups.has(category)) groups.set(category, { category: label, items: [] });
+    for (const item of group.items) {
+      groups.get(category)!.items.push({ title: item.title, href: item.href, featured: false });
+    }
   }
-
   return DOCUMENT_CATEGORY_ORDER.map((c) => groups.get(c)).filter((g): g is DocGroup => !!g);
 }
 
 // ---------- Gallery albums ----------
 export type GalleryAlbumView = { title: string; photos: string[] };
 export async function getGalleryAlbums(): Promise<GalleryAlbumView[]> {
-  const albums = await safe(
-    () =>
-      prisma.galleryAlbum.findMany({
-        orderBy: { createdAt: 'desc' },
-        include: { photos: { orderBy: { order: 'asc' } } },
-      }),
-    []
+  return GALLERY_ALBUMS.map((a) => ({ title: a.title, photos: a.photos.filter(Boolean) })).filter(
+    (a) => a.photos.length > 0
   );
-  return albums
-    .map((a) => ({ title: a.title, photos: a.photos.map((p) => p.url).filter(Boolean) }))
-    .filter((a) => a.photos.length > 0);
 }
 
 // ---------- Admission cycle ----------
@@ -281,37 +227,56 @@ export type Admission = {
   steps?: string[];
   documentsRequired?: string[];
 };
+const ACTIVE_ADMISSION: Admission = {
+  academicYear: '2026-27',
+  instituteCode: 'MB5521',
+  eligibilityGeneral: '50% aggregate',
+  eligibilityReserved: '45% aggregate',
+  cetCellUrl: 'https://cetcell.mahacet.org/',
+  notes:
+    "Candidates must be Indian nationals who have appeared and qualified MAH-MBA-CET for the relevant year, or hold a valid CMAT / CAT score, along with any bachelor's degree.",
+  steps: [
+    'Register online with the State CET Cell',
+    'Submit institute preferences',
+    'Complete document verification at your allotted Facilitation Centre',
+    'State authorities publish the merit list',
+    'State CET Cell releases the admission allotment',
+    'Report to the allotted institute within the given timeframe',
+    'Submit your application form and complete admission reporting the same day',
+  ],
+  documentsRequired: [
+    'Entrance exam (MAH-MBA-CET / CMAT / CAT) scorecard',
+    'FC confirmation letter',
+    'Degree mark statements and passing certificate',
+    'Transfer and leaving certificate',
+    'Migration certificate (if applicable)',
+    'Nationality and domicile certificate (if applicable)',
+    'Caste certificate (reserved categories)',
+    'Gap certificate, if applicable',
+    'SSC / HSC marksheets',
+    'Income certificate (reserved categories)',
+    'Disability certificate (if applicable)',
+    'Passport-size photographs and Aadhar card',
+  ],
+};
 export async function getActiveAdmission(): Promise<Admission | null> {
-  const row = await safe(
-    () => prisma.admission.findFirst({ where: { active: true }, orderBy: { academicYear: 'desc' } }),
-    null
-  );
-  if (!row) return null;
-  return {
-    academicYear: row.academicYear,
-    instituteCode: row.instituteCode,
-    eligibilityGeneral: row.eligibilityGeneral,
-    eligibilityReserved: row.eligibilityReserved,
-    cetCellUrl: row.cetCellUrl,
-    notes: row.notes,
-    steps: (row.steps as string[] | null) ?? [],
-    documentsRequired: (row.documentsRequired as string[] | null) ?? [],
-  };
+  return ACTIVE_ADMISSION;
 }
 
 // ---------- IQAC ----------
 export type IqacRecord = { academicYear: string; objectives?: string[]; functionsDescription?: string | null };
+const IQAC_RECORD: IqacRecord = {
+  academicYear: '2025-26',
+  objectives: [
+    'Develop a system for conscious, consistent and catalytic improvement in the overall performance of the institute',
+    'Promote measures for institutional functioning towards quality enhancement through internalisation of a quality culture and best practices',
+    'Ensure continuous improvement in academic and administrative activities',
+  ],
+  functionsDescription:
+    'The IQAC develops quality benchmarks, facilitates a learner-centric academic environment, organises quality-assurance workshops, collects stakeholder feedback, and prepares the Annual Quality Assurance Report (AQAR) each year.',
+};
 export async function getIqacRecord(): Promise<IqacRecord | null> {
-  const row = await safe(
-    () => prisma.iqac.findFirst({ where: { active: true }, orderBy: { academicYear: 'desc' } }),
-    null
-  );
-  if (!row) return null;
-  return {
-    academicYear: row.academicYear,
-    objectives: (row.objectives as string[] | null) ?? [],
-    functionsDescription: row.functionsDescription,
-  };
+  return IQAC_RECORD;
 }
 
 // ---------- Placements page ----------
@@ -322,16 +287,22 @@ export type PlacementsPage = {
   prepBody?: string | null;
   disclaimer?: string | null;
 };
+const PLACEMENTS_PAGE: PlacementsPage = {
+  processSteps: ['Announcement', 'Registration', 'Pre-placement talks', 'Shortlisting', 'Interviews', 'Selection', 'Placement statistics'],
+  policyRules: [
+    'Students may apply to multiple companies until they receive their first offer — after accepting an offer, they must not apply to other companies.',
+    'False information in resumes or manipulated documents leads to disqualification.',
+    'Misconduct or indiscipline during the placement process leads to disqualification.',
+    'Absenteeism from interviews without prior notice, or not joining after accepting an offer, leads to disqualification.',
+  ],
+  prepTitle: 'Pre-placement preparation',
+  prepBody:
+    'The placement cell runs résumé-building workshops, interview preparation sessions, mock interviews and personality development programmes to enhance student employability, alongside internships, live projects, industrial visits and guest lectures.',
+  disclaimer:
+    'Placement outcomes shown reflect students individually placed following recruitment drives; overall placement statistics are published once verified data is available.',
+};
 export async function getPlacementsPage(): Promise<PlacementsPage | null> {
-  const row = await safe(() => prisma.placementsPage.findUnique({ where: { id: 1 } }), null);
-  if (!row) return null;
-  return {
-    processSteps: (row.processSteps as string[] | null) ?? [],
-    policyRules: (row.policyRules as string[] | null) ?? [],
-    prepTitle: row.prepTitle,
-    prepBody: row.prepBody,
-    disclaimer: row.disclaimer,
-  };
+  return PLACEMENTS_PAGE;
 }
 
 // ---------- About page ----------
@@ -352,29 +323,35 @@ export type AboutPage = {
   chairmanPhoto?: string | null;
   approvalsNote?: string | null;
 };
+const ABOUT_PAGE: AboutPage = {
+  foundationEyebrow: 'Our foundation',
+  foundationTitle: 'Education that moves communities forward.',
+  foundationBody:
+    "Established in 1960, Shikshan Prasarak Sanstha aims to provide higher education in rural areas like Sangamner. Sangamner College was founded on January 23, 1961, on Netaji Subhashchandra Bose's birth anniversary.\n\nArts and Commerce courses began in June 1961, followed by Science in June 1965. The institution has since broadened access to vocational and professional education — including B.B.A, B.C.A, B.Voc., Computer Science, MBA, B.Ed, D.Ed and Law.",
+  timeline: [
+    { year: '1960', text: 'Shikshan Prasarak Sanstha established' },
+    { year: '1961', text: 'Sangamner College founded; Arts & Commerce begin' },
+    { year: '1965', text: 'Science courses introduced' },
+  ],
+  missionEyebrow: 'Mission',
+  missionTitle: 'Uplift disadvantaged rural youth.',
+  missionBody:
+    'The Sanstha\'s guiding objective is to "uplift disadvantaged rural youth, considering local social circumstances," carried forward under one core principle:',
+  missionQuote: 'Think globally, act locally.',
+  visionBody:
+    'We aim to make local excellence globally competitive through innovative and skill-based programmes for students from diverse cultural backgrounds, nurturing spiritual, moral, intellectual, social, emotional and physical development through value-based education.',
+  chairmanQuote:
+    'Our institution believes in bringing about changes that are a need of the time but also cherishes eternal values.',
+  chairmanBody:
+    "Human resources are the real wealth of this institution. We advocate experiential learning that goes beyond the classroom walls to build every student's confidence for the world of business.",
+  chairmanName: 'Dr. Sanjay Malpani',
+  chairmanTitle: 'Chairman, Shikshan Prasarak Sanstha',
+  chairmanPhoto: '/uploads/2024/01/dr.-sanjay-malpani.jpg',
+  approvalsNote:
+    "Approved by AICTE, DTE Maharashtra and the Government of India's Ministry of Education. Affiliated to Savitribai Phule Pune University.",
+};
 export async function getAboutPage(): Promise<AboutPage | null> {
-  const row = await safe(
-    () => prisma.aboutPage.findUnique({ where: { id: 1 }, include: { timeline: { orderBy: { order: 'asc' } } } }),
-    null
-  );
-  if (!row) return null;
-  return {
-    foundationEyebrow: row.foundationEyebrow,
-    foundationTitle: row.foundationTitle,
-    foundationBody: row.foundationBody,
-    timeline: row.timeline.map((t) => ({ year: t.year, text: t.text })),
-    missionEyebrow: row.missionEyebrow,
-    missionTitle: row.missionTitle,
-    missionBody: row.missionBody,
-    missionQuote: row.missionQuote,
-    visionBody: row.visionBody,
-    chairmanQuote: row.chairmanQuote,
-    chairmanBody: row.chairmanBody,
-    chairmanName: row.chairmanName,
-    chairmanTitle: row.chairmanTitle,
-    chairmanPhoto: row.chairmanPhotoUrl,
-    approvalsNote: row.approvalsNote,
-  };
+  return ABOUT_PAGE;
 }
 
 // ---------- Homepage dynamic sections ----------
@@ -389,28 +366,46 @@ export type HeroSlide = {
   order: number;
 };
 export type PhotoCaption = { image: string | null; caption?: string; order: number };
+const BUILDING_PHOTOS = ['/uploads/2025/06/New-building-1.jpeg', '/uploads/2025/06/New-building-2.jpeg', '/uploads/2025/06/New-building-3.jpeg'];
+const HERO_SLIDES: HeroSlide[] = [
+  {
+    image: BUILDING_PHOTOS[0],
+    eyebrow: 'Admissions 2026–27 · Now open',
+    title: 'An education that',
+    accent: 'means business.',
+    copy: "A two-year, full-time MBA affiliated to Savitribai Phule Pune University — built on six decades of Shikshan Prasarak Sanstha's commitment to rural access and academic rigour.",
+    buttonLabel: 'Apply for 2026–27',
+    buttonHref: '/admissions#enquire',
+    order: 0,
+  },
+  {
+    image: BUILDING_PHOTOS[1],
+    eyebrow: 'Welcome to SPS MBA',
+    title: 'A campus that',
+    accent: 'inspires.',
+    copy: 'Discover an academic environment shaped by strong values, experienced faculty and meaningful opportunities to learn beyond the classroom.',
+    buttonLabel: 'Explore our campus',
+    buttonHref: '/campus/facilities',
+    order: 1,
+  },
+  {
+    image: BUILDING_PHOTOS[2],
+    eyebrow: 'Five specialisation areas',
+    title: 'Find your',
+    accent: 'direction.',
+    copy: 'Develop a broad management foundation and pursue the functional area that aligns with your ambitions.',
+    buttonLabel: 'Explore the MBA',
+    buttonHref: '/academics/mba',
+    order: 2,
+  },
+];
+const PHOTO_CAPTIONS: PhotoCaption[] = [
+  { image: BUILDING_PHOTOS[0], caption: 'The Ghulewadi campus', order: 0 },
+  { image: BUILDING_PHOTOS[1], caption: 'Spaces built to inspire', order: 1 },
+  { image: BUILDING_PHOTOS[2], caption: 'Where the MBA takes shape', order: 2 },
+];
 export async function getHomepageSections(): Promise<{ heroSlides: HeroSlide[]; photoCaptions: PhotoCaption[] }> {
-  const [slides, captions] = await safe(
-    () =>
-      Promise.all([
-        prisma.heroSlide.findMany({ orderBy: { order: 'asc' } }),
-        prisma.photoCaption.findMany({ orderBy: { order: 'asc' } }),
-      ]),
-    [[], []] as [Awaited<ReturnType<typeof prisma.heroSlide.findMany>>, Awaited<ReturnType<typeof prisma.photoCaption.findMany>>]
-  );
-  return {
-    heroSlides: slides.map((s) => ({
-      image: s.imageUrl,
-      eyebrow: s.eyebrow ?? undefined,
-      title: s.title,
-      accent: s.accent ?? undefined,
-      copy: s.copy ?? undefined,
-      buttonLabel: s.buttonLabel ?? undefined,
-      buttonHref: s.buttonHref ?? undefined,
-      order: s.order,
-    })),
-    photoCaptions: captions.map((c) => ({ image: c.imageUrl, caption: c.caption ?? undefined, order: c.order })),
-  };
+  return { heroSlides: HERO_SLIDES, photoCaptions: PHOTO_CAPTIONS };
 }
 
 // ---------- Homepage popup ----------
@@ -423,24 +418,13 @@ export type HomepagePopup = {
   buttonLabel?: string | null;
   buttonHref?: string | null;
 };
+// Disabled by default, matching the previous seeded default.
 export async function getHomepagePopup(): Promise<HomepagePopup | null> {
-  const popup = await safe(() => prisma.homepagePopup.findUnique({ where: { id: 1 } }), null);
-  if (!popup?.enabled) return null;
-  const today = new Date().toISOString().slice(0, 10);
-  if (popup.startDate && today < popup.startDate.toISOString().slice(0, 10)) return null;
-  if (popup.endDate && today > popup.endDate.toISOString().slice(0, 10)) return null;
-  return {
-    id: popup.id,
-    updatedAt: popup.updatedAt.toISOString(),
-    title: popup.title,
-    message: popup.message,
-    image: popup.imageUrl,
-    buttonLabel: popup.buttonLabel,
-    buttonHref: popup.buttonHref,
-  };
+  return null;
 }
 
 // ---------- News & Events (homepage blog/events tabs + detail pages) ----------
+// No static content authored yet — kept empty like the previous DB state.
 export type NewsItem = {
   title: string;
   slug: string;
@@ -449,31 +433,11 @@ export type NewsItem = {
   coverImage?: string | null;
   publishedDate?: string;
 };
-export async function getNews(limit = 50): Promise<NewsItem[]> {
-  const rows = await safe(
-    () => prisma.news.findMany({ orderBy: { publishedDate: 'desc' }, take: limit }),
-    []
-  );
-  return rows.map((n) => ({
-    title: n.title,
-    slug: n.slug,
-    summary: n.summary ?? undefined,
-    body: n.body ?? undefined,
-    coverImage: n.coverImageUrl,
-    publishedDate: n.publishedDate?.toISOString(),
-  }));
+export async function getNews(_limit = 50): Promise<NewsItem[]> {
+  return [];
 }
-export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
-  const n = await safe(() => prisma.news.findUnique({ where: { slug } }), null);
-  if (!n) return null;
-  return {
-    title: n.title,
-    slug: n.slug,
-    summary: n.summary ?? undefined,
-    body: n.body ?? undefined,
-    coverImage: n.coverImageUrl,
-    publishedDate: n.publishedDate?.toISOString(),
-  };
+export async function getNewsBySlug(_slug: string): Promise<NewsItem | null> {
+  return null;
 }
 
 export type EventItem = {
@@ -486,33 +450,9 @@ export type EventItem = {
   endDate?: string;
   venue?: string;
 };
-export async function getEvents(limit = 50): Promise<EventItem[]> {
-  const rows = await safe(
-    () => prisma.event.findMany({ orderBy: { startDate: 'desc' }, take: limit }),
-    []
-  );
-  return rows.map((e) => ({
-    title: e.title,
-    slug: e.slug,
-    description: e.description ?? undefined,
-    coverImage: e.coverImageUrl,
-    gallery: (e.gallery as string[] | null) ?? [],
-    startDate: e.startDate?.toISOString(),
-    endDate: e.endDate?.toISOString(),
-    venue: e.venue ?? undefined,
-  }));
+export async function getEvents(_limit = 50): Promise<EventItem[]> {
+  return [];
 }
-export async function getEventBySlug(slug: string): Promise<EventItem | null> {
-  const e = await safe(() => prisma.event.findUnique({ where: { slug } }), null);
-  if (!e) return null;
-  return {
-    title: e.title,
-    slug: e.slug,
-    description: e.description ?? undefined,
-    coverImage: e.coverImageUrl,
-    gallery: (e.gallery as string[] | null) ?? [],
-    startDate: e.startDate?.toISOString(),
-    endDate: e.endDate?.toISOString(),
-    venue: e.venue ?? undefined,
-  };
+export async function getEventBySlug(_slug: string): Promise<EventItem | null> {
+  return null;
 }
