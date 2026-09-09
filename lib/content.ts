@@ -22,18 +22,21 @@ export const facilities=[
 ];
 
 export const faculty=[
-  {name:'Dr. Nitin R. Zaware',role:'Director',qual:'M.Com, M.P.M., MBA, M.Phil, Ph.D., NET',exp:'28 years',focus:'Management',photo:'/uploads/2025/07/8fd38ab3-f8c8-401c-82b2-71d508883fce-300x300.webp'},
-  {name:'Dr. Kiran D. Gonte',role:'Associate Professor',qual:'B.Sc, MBA, Ph.D.',exp:'16 years',focus:'Marketing Management',photo:'/uploads/2025/07/imgi_20_Dr.-Kiran.webp'},
-  {name:'Dr. Neha P. Shah',role:'Assistant Professor',qual:'M.Com, MBA (Finance), Ph.D., SET',exp:'15 years',focus:'Financial Management',photo:'/images/faculty/dr-neha-p-shah.webp'},
-  {name:'Dr. Viddesh B. Andure',role:'Assistant Professor',qual:'LL.B., MBA (HRM), NET, Ph.D.',exp:'15 years',focus:'Human Resource Management',photo:'/images/faculty/dr-viddesh-b-andure.webp'},
-  {name:'Mr. Santosh B. Khamkar',role:'Assistant Professor',qual:'B.Sc., MBA (Marketing), Ph.D. pursuing',exp:'16 years',focus:'Marketing Management',photo:'/uploads/2025/07/imgi_22_Mr.-Santosh-300x300.webp'},
-  {name:'Mrs. Pratima A. Gade',role:'Assistant Professor',qual:'B.Sc. CS, M.Sc. CS, MBA (IT), Ph.D. pursuing',exp:'14 years',focus:'IT & Business Analytics',photo:'/images/faculty/mrs-pratima-a-gade.webp'},
-  {name:'Mrs. Vaishali S. Nawale',role:'Assistant Professor',qual:'B.Sc., MBA (HR, IB), Ph.D. pursuing',exp:'8 years (6 industry, 2 academic)',focus:'HR & International Business',photo:'/uploads/2025/07/imgi_26_Vaishali-N.-Chaudhari-300x300.webp'},
-  {name:'Mr. Mahesh A. Pawade',role:'Assistant Professor',qual:'MBA (Marketing, HRM), M.Com, M.A. (Economics), NET, SET, Ph.D. pursuing',exp:'14 years',focus:'Marketing & HRM',photo:'/images/faculty/mr-mahesh-a-pawade.webp'},
-  {name:'Dr. Gosavi Anil Gorakshanath',role:'Assistant Professor',qual:'M.Com, M.Phil, NET, SET, Ph.D.',exp:'1 year',focus:'Business Administration',photo:'/uploads/2026/01/Dr.Gosavi-Anil-Gorakshanath-Photo-245x300.jpeg'},
-  {name:'Mrs. Navale Dhanvantari Vishvasrao',role:'Assistant Professor',qual:'M.Com (Business Administration), SET, Ph.D. & MBA pursuing',exp:'1 year',focus:'Finance',photo:'/uploads/2026/01/Mrs.-Dhanvantari-Vishvasrao-Navale-Photo-300x300.jpeg'},
-  {name:'Mrs. Unawane Tejal Mangesh',role:'Assistant Professor',qual:'BE (Computer), MBA (HR)',exp:'1 year',focus:'Business Analytics',photo:'/uploads/2026/01/Mrs.-Unawane-Tejal-Mangesh-Photo-300x300.png'},
-  {name:'Mr. Kudal Dattatray Sarangdhar',role:'Assistant Professor',qual:'M.Com, B.Ed, SET (Commerce), Ph.D. pursuing',exp:'1 year',focus:'Finance',photo:'/uploads/2026/01/Kudal-Dattatray-Sarangdhar-Photo-255x300.jpeg'}
+  {name:'Dr. Nitin R. Zaware',role:'Director',qual:'M.Com, M.P.M., MBA, M.Phil, Ph.D., NET',exp:'28 years',focus:'Management',photo:'/uploads/2025/07/8fd38ab3-f8c8-401c-82b2-71d508883fce-300x300.webp',dept:'MBA'},
+  {name:'Dr. Kiran D. Gonte',role:'Associate Professor',qual:'B.Sc, MBA, Ph.D.',exp:'16 years',focus:'Marketing Management',photo:'/uploads/2025/07/imgi_20_Dr.-Kiran.webp',dept:'MBA'},
+  {name:'Dr. Neha P. Shah',role:'Assistant Professor',qual:'M.Com, MBA (Finance), Ph.D., SET',exp:'15 years',focus:'Financial Management',photo:'/images/faculty/dr-neha-p-shah.webp',dept:'MBA'},
+  {name:'Dr. Viddesh B. Andure',role:'Assistant Professor',qual:'LL.B., MBA (HRM), NET, Ph.D.',exp:'15 years',focus:'Human Resource Management',photo:'/images/faculty/dr-viddesh-b-andure.webp',dept:'MBA'},
+  {name:'Mr. Santosh B. Khamkar',role:'Assistant Professor',qual:'B.Sc., MBA (Marketing), Ph.D. pursuing',exp:'16 years',focus:'Marketing Management',photo:'/uploads/2025/07/imgi_22_Mr.-Santosh-300x300.webp',dept:'MBA'},
+  {name:'Mrs. Pratima A. Gade',role:'Assistant Professor',qual:'B.Sc. CS, M.Sc. CS, MBA (IT), Ph.D. pursuing',exp:'14 years',focus:'IT & Business Analytics',photo:'/images/faculty/mrs-pratima-a-gade.webp',dept:'MBA'},
+  {name:'Mrs. Vaishali S. Nawale',role:'Assistant Professor',qual:'B.Sc., MBA (HR, IB), Ph.D. pursuing',exp:'8 years (6 industry, 2 academic)',focus:'HR & International Business',photo:'/uploads/2025/07/imgi_26_Vaishali-N.-Chaudhari-300x300.webp',dept:'MBA'},
+  {name:'Mr. Mahesh A. Pawade',role:'Assistant Professor',qual:'MBA (Marketing, HRM), M.Com, M.A. (Economics), NET, SET, Ph.D. pursuing',exp:'14 years',focus:'Marketing & HRM',photo:'/images/faculty/mr-mahesh-a-pawade.webp',dept:'MBA'},
+  {name:'Dr. Gosavi Anil Gorakshanath',role:'Assistant Professor',qual:'M.Com, M.Phil, NET, SET, Ph.D.',exp:'1 year',focus:'Business Administration',photo:'/uploads/2026/01/Dr.Gosavi-Anil-Gorakshanath-Photo-245x300.jpeg',dept:'MBA'},
+  {name:'Mrs. Navale Dhanvantari Vishvasrao',role:'Assistant Professor',qual:'M.Com (Business Administration), SET, Ph.D. & MBA pursuing',exp:'1 year',focus:'Finance',photo:'/uploads/2026/01/Mrs.-Dhanvantari-Vishvasrao-Navale-Photo-300x300.jpeg',dept:'MBA'},
+  {name:'Mrs. Unawane Tejal Mangesh',role:'Assistant Professor',qual:'BE (Computer), MBA (HR)',exp:'1 year',focus:'Business Analytics',photo:'/uploads/2026/01/Mrs.-Unawane-Tejal-Mangesh-Photo-300x300.png',dept:'MBA'},
+  {name:'Mr. Kudal Dattatray Sarangdhar',role:'Assistant Professor',qual:'M.Com, B.Ed, SET (Commerce), Ph.D. pursuing',exp:'1 year',focus:'Finance',photo:'/uploads/2026/01/Kudal-Dattatray-Sarangdhar-Photo-255x300.jpeg',dept:'MBA'},
+  {name:'Dr. Harish D. Kalan',role:'Associate Professor',qual:'MCS, MBA (IT & Marketing), NET (Management), SET (Computer Science & Application), SET (Management), Ph.D.',exp:'18 years (Teaching & Industry)',focus:'Data Science, Business Analytics & Marketing Analytics',photo:'/images/faculty/mca/dr-harish-d-kalan.jpeg',dept:'MCA'},
+  {name:'Dr. Padmashri B. Rokade',role:'Assistant Professor',qual:'MCA, Ph.D (Computer Management)',photo:'/images/faculty/mca/dr-padmashri-b-rokade.jpeg',dept:'MCA'},
+  {name:'Prof. Prachi S. Kakad',role:'Assistant Professor',qual:'BCA, MCA',exp:'5 years teaching, 6 years IT industry',photo:'/images/faculty/mca/prof-prachi-s-kakad.jpeg',dept:'MCA'}
 ];
 
 export const alumni=[

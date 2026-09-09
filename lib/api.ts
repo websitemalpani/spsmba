@@ -150,6 +150,7 @@ export type Faculty = {
   experience?: string | null;
   specialization?: string | null;
   photo?: string | null;
+  department: string;
   order: number;
 };
 export async function getFaculty(): Promise<Faculty[]> {
@@ -161,6 +162,7 @@ export async function getFaculty(): Promise<Faculty[]> {
     experience: f.exp,
     specialization: f.focus,
     photo: f.photo ?? null,
+    department: f.dept,
     order,
   }));
 }
