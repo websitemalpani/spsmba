@@ -130,13 +130,14 @@ export async function getSpecializations(): Promise<Specialization[]> {
 }
 
 // ---------- Facilities ----------
-export type Facility = { title: string; slug: string; shortDescription?: string | null; description?: string | null; order: number };
+export type Facility = { title: string; slug: string; shortDescription?: string | null; description?: string | null; photos: string[]; order: number };
 export async function getFacilities(): Promise<Facility[]> {
   return FACILITIES.map((f, order) => ({
     title: f.title,
     slug: slugify(f.title),
     shortDescription: f.tag,
     description: f.text,
+    photos: f.photos ?? [],
     order,
   }));
 }
