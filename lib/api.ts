@@ -379,9 +379,10 @@ export type HeroSlide = {
 };
 export type PhotoCaption = { image: string | null; caption?: string; order: number };
 const BUILDING_PHOTOS = ['/uploads/2025/06/New-building-1.jpeg', '/uploads/2025/06/New-building-2.jpeg', '/uploads/2025/06/New-building-3.jpeg'];
+const SLIDER_PHOTOS = ['/images/slider/1.jpg', '/images/slider/2.jpg', '/images/slider/3.jpg', '/images/slider/4.jpg'];
 const HERO_SLIDES: HeroSlide[] = [
   {
-    image: BUILDING_PHOTOS[0],
+    image: SLIDER_PHOTOS[0],
     eyebrow: 'Admissions 2026–27 · Now open',
     title: 'An education that',
     accent: 'means business.',
@@ -391,7 +392,7 @@ const HERO_SLIDES: HeroSlide[] = [
     order: 0,
   },
   {
-    image: BUILDING_PHOTOS[1],
+    image: SLIDER_PHOTOS[1],
     eyebrow: 'Welcome to SPS MBA',
     title: 'A campus that',
     accent: 'inspires.',
@@ -401,7 +402,7 @@ const HERO_SLIDES: HeroSlide[] = [
     order: 1,
   },
   {
-    image: BUILDING_PHOTOS[2],
+    image: SLIDER_PHOTOS[2],
     eyebrow: 'Five specialisation areas',
     title: 'Find your',
     accent: 'direction.',
@@ -409,6 +410,16 @@ const HERO_SLIDES: HeroSlide[] = [
     buttonLabel: 'Explore the MBA',
     buttonHref: '/academics/mba',
     order: 2,
+  },
+  {
+    image: SLIDER_PHOTOS[3],
+    eyebrow: 'Meet our faculty',
+    title: 'Learn from',
+    accent: 'mentors who guide.',
+    copy: 'Ph.D.-qualified faculty with real industry grounding invest in every cohort, from the classroom through to placement.',
+    buttonLabel: 'Meet the faculty',
+    buttonHref: '/faculty',
+    order: 3,
   },
 ];
 const PHOTO_CAPTIONS: PhotoCaption[] = [
