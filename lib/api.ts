@@ -441,9 +441,13 @@ export type HomepagePopup = {
   buttonLabel?: string | null;
   buttonHref?: string | null;
 };
-// Disabled by default, matching the previous seeded default.
 export async function getHomepagePopup(): Promise<HomepagePopup | null> {
-  return null;
+  return {
+    id: 1,
+    updatedAt: '2026-09-15',
+    title: 'Walk-in Interview',
+    image: '/images/walk in interview.jpeg',
+  };
 }
 
 // ---------- News & Events (homepage blog/events tabs + detail pages) ----------
