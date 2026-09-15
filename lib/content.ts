@@ -74,7 +74,9 @@ export const documents=[
   {category:'Admissions',items:[
     {title:'Admission Notification 2026–27 (ACAP Seats)',href:'/uploads/2026/09/Admission-Notification-2026-27-ACAP-Seats.pdf'},
     {title:'Final Merit List 2025–26',href:'/uploads/2025/09/Final-Merit-List-2025-26.pdf'},
-    {title:'Admission Notification — Lateral Entry 2025–26',href:'https://sandybrown-porcupine-672664.hostingersite.com/wp-content/uploads/2025/08/Admission_Notiifcation_Lateral_Entry_2025-26.pdf'}
+    {title:'Admission Notification — Lateral Entry 2025–26',href:'https://sandybrown-porcupine-672664.hostingersite.com/wp-content/uploads/2025/08/Admission_Notiifcation_Lateral_Entry_2025-26.pdf'},
+    {title:'MBA Merit List',href:'/pdf/MBA%20merit%20list.pdf'},
+    {title:'MCA Merit List',href:'/pdf/MCA%20merit%20list.pdf'}
   ]},
   {category:'Fees',items:[
     {title:'FRA Fees 2025–26',href:'/uploads/2025/12/FRA-FEE-2025-26.pdf'},
