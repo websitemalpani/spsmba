@@ -80,8 +80,7 @@ export const documents=[
   ]},
   {category:'Fees',items:[
     {title:'FRA Fees 2025–26',href:'/uploads/2025/12/FRA-FEE-2025-26.pdf'},
-    {title:'Ad-hoc Fees 2024–25',href:'/uploads/2025/10/Ad-hoc-2024-25.pdf'},
-    {title:'Ad-hoc Fees 2023–24',href:'/uploads/2025/10/Adhoc-fee-2023-2024.pdf'}
+    {title:'Ad-hoc Fees 2024–25',href:'/uploads/2025/10/Ad-hoc-2024-25.pdf'}
   ]},
   {category:'IQAC',items:[
     {title:'IQAC 2024–25',href:'/uploads/2025/03/IQAC-2024-25.pdf'},
