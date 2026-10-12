@@ -1,9 +1,9 @@
-import {PageHero} from '@/components/page-hero';import {EnquiryForm} from '@/components/enquiry-form';import {getActiveAdmission,getDocumentsGrouped} from '@/lib/api';import {FileText} from 'lucide-react';
+import {PageHero} from '@/components/page-hero';import {EnquiryForm} from '@/components/enquiry-form';import {YearFolders} from '@/components/year-folders';import {getActiveAdmission,getAdmissionLists} from '@/lib/api';import {FileText} from 'lucide-react';
 
 export default async function Admissions(){
-  const[admission,documents]=await Promise.all([getActiveAdmission(),getDocumentsGrouped()]);
+  const[admission,lists]=await Promise.all([getActiveAdmission(),getAdmissionLists()]);
   const steps=admission?.steps??[];const docs=admission?.documentsRequired??[];
-  const notices=documents.find(d=>d.category.startsWith('Admissions'))?.items.filter(i=>i.featured)??[];
+  const notices=lists.notification[0]?.items??[];
   return <main>
 <PageHero kicker="Admissions" title="Five clear steps to your SPS MBA." body="Admissions follow the rules and schedule of the Maharashtra Admission Regulating Authority and State Common Entrance Test Cell."/>
 <section id="process" className="mx-auto max-w-7xl px-5 py-20">
@@ -23,5 +23,12 @@ export default async function Admissions(){
     <div id="enquire" className="h-fit rounded-3xl bg-mist p-7"><h2 className="mb-6 text-xl font-extrabold text-navy">Admission enquiry</h2><EnquiryForm/></div>
   </div>
 </section>
+<section id="lists" className="scroll-mt-40 bg-mist py-20"><div className="mx-auto max-w-7xl px-5">
+  <p className="eyebrow">Admission lists</p><h2 className="display mt-4 text-4xl text-navy">Merit list &amp; admission list.</h2>
+  <div className="mt-10 grid gap-10 lg:grid-cols-2">
+    <div><h3 className="mb-4 text-sm font-extrabold uppercase tracking-[.08em] text-navy">Merit list</h3><YearFolders folders={lists.merit} empty="The merit list will be published here."/></div>
+    <div><h3 className="mb-4 text-sm font-extrabold uppercase tracking-[.08em] text-navy">Admission list</h3><YearFolders folders={lists.admission} empty="The admission list will be published here once admissions are confirmed."/></div>
+  </div>
+</div></section>
 </main>;
 }

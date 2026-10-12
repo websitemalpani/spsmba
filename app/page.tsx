@@ -1,10 +1,11 @@
-import {HomeHeroSlider} from '@/components/home-hero-slider';import {CampusGallery} from '@/components/campus-gallery';import {NoticeBoard} from '@/components/notice-board';import {HomepagePopupModal} from '@/components/homepage-popup';import {BlogEventsTabs} from '@/components/blog-events-tabs';import {CountUp} from '@/components/count-up';import {Sunburst} from '@/components/sunburst';import {Reveal} from '@/components/reveal';import {getSpecializations,getFacilities,getDocumentsGrouped,getHomepageSections,getHomepagePopup,getQuickLinks,getNews,getEvents,mediaUrl} from '@/lib/api';import Link from 'next/link';import {ArrowUpRight,BookOpen,Dumbbell,Landmark,Layers,Monitor,ShieldCheck,Users,Wifi} from 'lucide-react';
+import {HomeHeroSlider} from '@/components/home-hero-slider';import {CampusGallery} from '@/components/campus-gallery';import {NoticeBoard} from '@/components/notice-board';import {HomepagePopupModal} from '@/components/homepage-popup';import {BlogEventsTabs} from '@/components/blog-events-tabs';import {CountUp} from '@/components/count-up';import {Sunburst} from '@/components/sunburst';import {Reveal} from '@/components/reveal';import {LeaderMessage,leadersFrom} from '@/components/leader-messages';import {getSpecializations,getFacilities,getDocumentsGrouped,getHomepageSections,getHomepagePopup,getQuickLinks,getNews,getEvents,getAboutPage,mediaUrl} from '@/lib/api';import Link from 'next/link';import {ArrowUpRight,BookOpen,Briefcase,Code2,Dumbbell,Landmark,Layers,Monitor,ShieldCheck,Users,Wifi} from 'lucide-react';
 const facilityIcons=[Wifi,BookOpen,Monitor,Dumbbell];
 const why=[['Six decades of access','Rooted in Shikshan Prasarak Sanstha’s 1960 mission to bring rigorous education to rural Maharashtra.'],['Recognised, regulated','Affiliated to Savitribai Phule Pune University, Pune and approved by AICTE, New Delhi, DTE, MH and Govt. of Maharashtra.'],['Five ways to specialise','Marketing, Finance, HR, Operations & Supply Chain or Business Analytics — shape the MBA around your ambition.'],['Faculty who mentor','Ph.D.-qualified teachers with real industry grounding, guiding every cohort closely.']];
 const whyMeta=[{Icon:Landmark,accent:'text-navy',bar:'bg-navy'},{Icon:ShieldCheck,accent:'text-blue',bar:'bg-blue'},{Icon:Layers,accent:'text-ember',bar:'bg-ember'},{Icon:Users,accent:'text-maroon',bar:'bg-maroon'}];
 const specAccents=['bg-navy text-white','bg-blue text-white','bg-ember text-white','bg-maroon text-white','bg-gold text-navy'];
+const programmes=[{name:'MBA',full:'Master of Business Administration',copy:'Two-year, full-time · 120 seats · Five specialisations',href:'/academics/mba',Icon:Briefcase,tone:'bg-navy'},{name:'MCA',full:'Master of Computer Applications',copy:'Two-year, full-time · Affiliated to SPPU, Pune',href:'/academics/mca',Icon:Code2,tone:'bg-gradient-to-br from-blue to-navy'}];
 const placementSteps=[['Prepare','Résumé workshops, interview preparation and mock interviews.'],['Experience','Internships, live projects, industrial visits and guest lectures.'],['Grow','Personality development and practical exposure for professional confidence.']];
-export default async function Home(){const[specializations,facilities,documentGroups,homeSections,popup,quickLinks,news,events]=await Promise.all([getSpecializations(),getFacilities(),getDocumentsGrouped(),getHomepageSections(),getHomepagePopup(),getQuickLinks(),getNews(3),getEvents(3)]);const[ict,library,labs,sports]=facilities;const[Ict,Book,Lab,Sport]=facilityIcons;const hasFacilityShowcase=facilities.length>=4;
+export default async function Home(){const[specializations,facilities,documentGroups,homeSections,popup,quickLinks,news,events,about]=await Promise.all([getSpecializations(),getFacilities(),getDocumentsGrouped(),getHomepageSections(),getHomepagePopup(),getQuickLinks(),getNews(3),getEvents(3),getAboutPage()]);const leaders=leadersFrom(about);const[ict,library,labs,sports]=facilities;const[Ict,Book,Lab,Sport]=facilityIcons;const hasFacilityShowcase=facilities.length>=4;
 const slides=homeSections.heroSlides.map(s=>({image:mediaUrl(s.image)||'',eyebrow:s.eyebrow,title:s.title,accent:s.accent,copy:s.copy,primary:s.buttonLabel,href:s.buttonHref})).filter(s=>s.image);
 const campusPhotos=homeSections.photoCaptions.map(p=>({src:mediaUrl(p.image)||'',caption:p.caption})).filter(p=>p.src);
 const newsCards=news.map(n=>({key:n.slug,image:mediaUrl(n.coverImage),title:n.title,date:n.publishedDate?new Date(n.publishedDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):null,excerpt:n.summary}));
@@ -19,9 +20,22 @@ return <main className="bg-paper">
 
 {quickLinks.length>0&&<section className="mx-auto max-w-[1320px] px-5 pt-6 sm:px-6"><Reveal className="flex flex-wrap gap-2.5">{quickLinks.map(q=><Link key={q.href} href={q.href} className="focus-ring rounded-full border border-slate-200 bg-white px-4 py-2 text-[11.5px] font-bold text-navy transition hover:border-navy hover:bg-navy hover:text-white">{q.label}</Link>)}</Reveal></section>}
 
+<section aria-label="Programmes" className="mx-auto max-w-[1320px] px-5 pt-10 sm:px-6"><div className="grid gap-4 md:grid-cols-2">
+  {programmes.map(({name,full,copy,href,Icon,tone},i)=><Reveal delay={i*.06} key={name}><Link href={href} className={`focus-ring group relative flex h-full items-center gap-6 overflow-hidden p-7 text-white transition hover:-translate-y-1 hover:shadow-xl sm:p-8 ${tone}`}>
+    <Icon size={34} strokeWidth={1.4} className="shrink-0 text-gold"/>
+    <div className="min-w-0 flex-1"><p className="display text-4xl font-semibold leading-none sm:text-5xl">{name}</p><p className="mt-2 text-[13px] font-bold text-white/85">{full}</p><p className="mt-1.5 text-xs leading-6 text-white/60">{copy}</p></div>
+    <ArrowUpRight size={20} className="shrink-0 text-white/50 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-gold"/>
+  </Link></Reveal>)}
+</div></section>
+
 <section className="mx-auto max-w-[1320px] px-5 pt-10 pb-6 sm:px-6">
   <Reveal><p className="eyebrow !text-gold">Stay updated</p><h2 className="display mt-4 text-3xl font-medium text-navy">Notices &amp; announcements.</h2></Reveal>
   <Reveal delay={.08} className="mt-6"><NoticeBoard documentGroups={documentGroups}/></Reveal>
+</section>
+
+<section id="news" className="mx-auto max-w-[1320px] px-5 py-12 sm:px-6">
+  <Reveal><p className="eyebrow !text-gold">From the institute</p><h2 className="display mt-4 text-3xl font-medium text-navy sm:text-4xl lg:whitespace-nowrap">News &amp; events.</h2></Reveal>
+  <Reveal delay={.08} className="mt-8"><BlogEventsTabs news={newsCards} events={eventCards}/></Reveal>
 </section>
 
 <section className="mx-auto max-w-[1320px] px-5 pb-10 sm:px-6"><Reveal className="grid grid-cols-2 gap-px overflow-hidden bg-slate-200 lg:grid-cols-4">
@@ -30,6 +44,11 @@ return <main className="bg-paper">
   <div className="relative overflow-hidden bg-paper p-6 pt-7 sm:p-8"><span className="absolute inset-x-0 top-0 h-[3px] bg-ember"/><span className="display block text-4xl font-semibold text-ember sm:text-6xl md:text-7xl"><CountUp to={5} pad2/></span><p className="mt-3.5 text-xs text-slate-500">Functional specialisations to choose from.</p></div>
   <div className="relative overflow-hidden bg-paper p-6 pt-7 sm:p-8"><span className="absolute inset-x-0 top-0 h-[3px] bg-maroon"/><span className="display block text-4xl font-semibold text-maroon sm:text-6xl md:text-7xl"><CountUp to={2}/></span><p className="mt-3.5 text-xs text-slate-500">Years, full-time, on the Ghulewadi campus.</p></div>
 </Reveal></section>
+
+{leaders.length>0&&<section className="bg-mist py-16"><div className="mx-auto max-w-[1320px] px-5 sm:px-6">
+  <Reveal><p className="eyebrow !text-gold">Leadership</p><h2 className="display mt-4 text-3xl font-medium text-navy sm:text-4xl">Messages from our leadership.</h2></Reveal>
+  <div className={`mt-9 grid gap-5 ${leaders.length>1?'lg:grid-cols-2':''}`}>{leaders.map((l,i)=><Reveal delay={i*.06} key={l.id}><LeaderMessage leader={l} compact/></Reveal>)}</div>
+</div></section>}
 
 <hr className="mx-auto max-w-[1320px] border-slate-200"/>
 
@@ -104,10 +123,6 @@ return <main className="bg-paper">
   <div className="mt-9"><CampusGallery photos={campusPhotos} facilityTitles={facilities.map(f=>f.title)}/></div>
 </div></section>
 
-<section id="news" className="mx-auto max-w-[1320px] px-5 py-16 sm:px-6">
-  <Reveal><p className="eyebrow !text-gold">From the institute</p><h2 className="display mt-4 text-3xl font-medium text-navy sm:text-4xl lg:whitespace-nowrap">News &amp; events.</h2></Reveal>
-  <Reveal delay={.08} className="mt-8"><BlogEventsTabs news={newsCards} events={eventCards}/></Reveal>
-</section>
 
 <section className="mx-auto max-w-[1320px] px-5 py-16 sm:px-6">
   <Reveal className="flex flex-wrap items-end justify-between gap-6">

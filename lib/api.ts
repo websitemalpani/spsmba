@@ -15,6 +15,7 @@ import {
   galleryAlbums as GALLERY_ALBUMS,
   cdcMembers as CDC_MEMBERS,
   quickLinks as QUICK_LINKS,
+  type DocItem,
 } from './content';
 
 export function mediaUrl(url?: string | null): string | null {
@@ -22,7 +23,7 @@ export function mediaUrl(url?: string | null): string | null {
 }
 
 // ---------- Navigation ----------
-export type NavItem = { label: string; href: string; order: number };
+export type NavItem = { label: string; href: string; order: number; children?: { label: string; href: string }[] };
 export async function getNavigation(): Promise<NavItem[]> {
   return NAV.map((n, order) => ({ ...n, order }));
 }
@@ -41,6 +42,8 @@ const FOOTER_GROUPS: FooterGroup[] = [
       { label: 'About us', href: '/about' },
       { label: 'Vision & mission', href: '/about#vision' },
       { label: "Chairman's message", href: '/about#chairman' },
+      { label: "Director's message", href: '/about#director' },
+      { label: 'Approval & Affiliation', href: '/approvals' },
       { label: 'College Development Committee', href: '/committees/college-development-committee' },
       { label: 'Contact', href: '/contact' },
     ],
@@ -49,7 +52,7 @@ const FOOTER_GROUPS: FooterGroup[] = [
     group: 'Academics',
     items: [
       { label: 'MBA program', href: '/academics/mba' },
-      { label: 'Specialisations', href: '/academics/mba#specialisations' },
+      { label: 'MCA program', href: '/academics/mca' },
       { label: 'Faculty', href: '/faculty' },
       { label: 'Facilities', href: '/campus/facilities' },
     ],
@@ -59,6 +62,7 @@ const FOOTER_GROUPS: FooterGroup[] = [
     items: [
       { label: 'MBA admissions', href: '/admissions' },
       { label: 'Admission process', href: '/admissions#process' },
+      { label: 'Merit list & admission list', href: '/admissions#lists' },
       { label: 'Fees', href: '/fees' },
       { label: 'Notices', href: '/notices' },
     ],
@@ -67,6 +71,7 @@ const FOOTER_GROUPS: FooterGroup[] = [
     group: 'Students',
     items: [
       { label: 'Student corner', href: '/students' },
+      { label: 'Placements', href: '/placements' },
       { label: 'Gallery', href: '/gallery' },
       { label: 'IQAC', href: '/iqac' },
       { label: 'Anti-ragging', href: '/committees/anti-ragging' },
@@ -214,6 +219,34 @@ export async function getDocumentsGrouped(): Promise<DocGroup[]> {
   return DOCUMENT_CATEGORY_ORDER.map((c) => groups.get(c)).filter((g): g is DocGroup => !!g);
 }
 
+// ---------- Documents, filed into academic-year folders ----------
+// Newest year first; documents with no year (standing permissions etc.) go in
+// a trailing folder labelled `undatedLabel`.
+export type YearFolder = { year: string; items: { title: string; href: string }[] };
+function toYearFolders(items: DocItem[], undatedLabel: string): YearFolder[] {
+  const byYear = new Map<string, YearFolder['items']>();
+  for (const { title, href, year = '' } of items) {
+    if (!byYear.has(year)) byYear.set(year, []);
+    byYear.get(year)!.push({ title, href });
+  }
+  return Array.from(byYear.entries())
+    .sort(([a], [b]) => (a === '' ? 1 : b === '' ? -1 : b.localeCompare(a)))
+    .map(([year, docs]) => ({ year: year || undatedLabel, items: docs }));
+}
+export async function getDocumentYearFolders(category: string, undatedLabel = 'Other documents'): Promise<YearFolder[]> {
+  return toYearFolders(DOCUMENTS.find((g) => g.category === category)?.items ?? [], undatedLabel);
+}
+
+// ---------- Merit lists & admission lists ----------
+export async function getAdmissionLists(): Promise<{ notification: YearFolder[]; merit: YearFolder[]; admission: YearFolder[] }> {
+  const items = DOCUMENTS.find((g) => g.category === 'Admissions')?.items ?? [];
+  return {
+    notification: toYearFolders(items.filter((i) => i.kind === 'notification'), 'Other'),
+    merit: toYearFolders(items.filter((i) => i.kind === 'merit'), 'Other'),
+    admission: toYearFolders(items.filter((i) => i.kind === 'admission'), 'Other'),
+  };
+}
+
 // ---------- College Development Committee ----------
 export type CdcMember = { name: string; role: string };
 export async function getCdcMembers(): Promise<CdcMember[]> {
@@ -333,6 +366,11 @@ export type AboutPage = {
   chairmanName?: string | null;
   chairmanTitle?: string | null;
   chairmanPhoto?: string | null;
+  directorQuote?: string | null;
+  directorBody?: string | null;
+  directorName?: string | null;
+  directorTitle?: string | null;
+  directorPhoto?: string | null;
   approvalsNote?: string | null;
 };
 const ABOUT_PAGE: AboutPage = {
@@ -359,6 +397,13 @@ const ABOUT_PAGE: AboutPage = {
   chairmanName: 'Dr. Sanjay Malpani',
   chairmanTitle: 'Chairman, Shikshan Prasarak Sanstha',
   chairmanPhoto: '/uploads/2024/01/dr.-sanjay-malpani.jpg',
+  // Director's message text is still to be supplied by the institute; the
+  // section stays hidden until `directorBody` is filled in.
+  directorQuote: null,
+  directorBody: null,
+  directorName: 'Dr. Nitin R. Zaware',
+  directorTitle: 'Director',
+  directorPhoto: '/uploads/2025/07/8fd38ab3-f8c8-401c-82b2-71d508883fce-300x300.webp',
   approvalsNote:
     "Approved by AICTE, DTE Maharashtra and the Government of India's Ministry of Education. Affiliated to Savitribai Phule Pune University.",
 };
@@ -477,9 +522,17 @@ export type EventItem = {
   endDate?: string;
   venue?: string;
 };
-export async function getEvents(_limit = 50): Promise<EventItem[]> {
-  return [];
+// Events are drawn from the gallery albums (already listed newest first), so a
+// new album in `lib/content.ts` shows up in News & Events automatically.
+const EVENTS: EventItem[] = GALLERY_ALBUMS.filter((a) => a.photos.length > 0).map((a) => ({
+  title: a.title,
+  slug: slugify(a.title),
+  coverImage: a.photos[0],
+  gallery: a.photos,
+}));
+export async function getEvents(limit = 50): Promise<EventItem[]> {
+  return EVENTS.slice(0, limit);
 }
-export async function getEventBySlug(_slug: string): Promise<EventItem | null> {
-  return null;
+export async function getEventBySlug(slug: string): Promise<EventItem | null> {
+  return EVENTS.find((e) => e.slug === slug) ?? null;
 }

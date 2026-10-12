@@ -1,10 +1,44 @@
-export const nav=[{label:'Home',href:'/'},{label:'About',href:'/about'},{label:'Academics',href:'/academics/mba'},{label:'Admissions',href:'/admissions'},{label:'Faculty',href:'/faculty'},{label:'Placements',href:'/placements'},{label:'Campus',href:'/campus/facilities'},{label:'IQAC',href:'/iqac'},{label:'Notices',href:'/notices'},{label:'Gallery',href:'/gallery'},{label:'Contact',href:'/contact'}];
+export type NavLink={label:string;href:string;children?:{label:string;href:string}[]};
+export const nav:NavLink[]=[
+  {label:'Home',href:'/'},
+  {label:'About',href:'/about',children:[
+    {label:'About us',href:'/about'},
+    {label:"Chairman's message",href:'/about#chairman'},
+    {label:"Director's message",href:'/about#director'},
+    {label:'Campus & facilities',href:'/campus/facilities'},
+    {label:'College Development Committee',href:'/committees/college-development-committee'}
+  ]},
+  {label:'Academics',href:'/academics/mba',children:[
+    {label:'MBA program',href:'/academics/mba'},
+    {label:'MCA program',href:'/academics/mca'},
+    {label:'Faculty',href:'/faculty'}
+  ]},
+  {label:'Admissions',href:'/admissions',children:[
+    {label:'Admission process',href:'/admissions#process'},
+    {label:'Merit list & admission list',href:'/admissions#lists'},
+    {label:'Admission enquiry',href:'/admissions#enquire'}
+  ]},
+  {label:'Fees',href:'/fees'},
+  {label:'Approval & Affiliation',href:'/approvals'},
+  {label:'IQAC',href:'/iqac'},
+  {label:'Placements',href:'/placements'},
+  {label:'Students',href:'/students',children:[
+    {label:'Student corner',href:'/students'},
+    {label:'Gallery',href:'/gallery'},
+    {label:'Anti-ragging',href:'/committees/anti-ragging'}
+  ]},
+  {label:'Notices',href:'/notices'},
+  {label:'Contact',href:'/contact'}
+];
 
 export const quickLinks=[
   {label:'Admissions',href:'/admissions'},
+  {label:'Merit List',href:'/admissions#lists'},
   {label:'Fee Structure',href:'/fees'},
+  {label:'Approval & Affiliation',href:'/approvals'},
   {label:'Notices',href:'/notices'},
   {label:'IQAC',href:'/iqac'},
+  {label:'Students',href:'/students'},
   {label:'Faculty',href:'/faculty'},
   {label:'Placements',href:'/placements'},
   {label:'Gallery',href:'/gallery'},
@@ -57,34 +91,38 @@ export const alumni=[
   {name:'Aishwarya Landge',role:'Sales Co-ordinator',company:'Jagit India Pvt. Ltd.',photo:'/uploads/2025/07/Aishwarya-Landge-.png'}
 ];
 
-export const documents=[
+// `year` files a document into its academic-year folder; items without one are
+// standing documents. Admissions items carry a `kind` so merit lists and
+// admission lists can be shown separately on the admissions page.
+export type DocItem={title:string;href:string;year?:string;kind?:'notification'|'merit'|'admission'};
+export const documents:{category:string;items:DocItem[]}[]=[
   {category:'Approvals & Affiliation',items:[
+    {title:'Affiliation Letter 2026–27 (MBA)',href:'/pdf/Affiliation%20Letter%202026-27%20MBA.pdf',year:'2026–27'},
+    {title:'MCA SPPU Affiliation 2026–27',href:'/pdf/MCA%20SPPU%20Affiliation%202026-27.pdf',year:'2026–27'},
+    {title:'MCA Government Resolution (GR)',href:'/pdf/MCA%20GR%20202606121800073408.pdf',year:'2026–27'},
+    {title:'AICTE EOA Report 2026–27',href:'/pdf/EOA%20Report%2026-27.PDF',year:'2026–27'},
+    {title:'SPPU Affiliation Approval Letter 2025–26',href:'/uploads/2025/10/SPPU-Affliation-Approval-Letter-2025-26.pdf',year:'2025–26'},
+    {title:'Mandatory Disclosure 2025',href:'/uploads/2025/10/Mandatory-Disclosure-2025-SPSMBA.pdf',year:'2025–26'},
+    {title:'AICTE EOA Report 2024–25',href:'/uploads/2025/10/AICTE-EOA-REPORT-2024-2025.pdf',year:'2024–25'},
     {title:'AICTE Permission Letter',href:'/uploads/2024/02/AICTE-Permission-Letter.pdf'},
-    {title:'SPPU Affiliation Approval Letter 2025–26',href:'/uploads/2025/10/SPPU-Affliation-Approval-Letter-2025-26.pdf'},
     {title:'DTE Permission Letter',href:'/uploads/2024/02/DTE-permission-Letter.pdf'},
     {title:'Government of Maharashtra Permission Letter',href:'/uploads/2024/02/MBA-Goverment-of-Maharashtra-Permission-Letter.pdf'},
-    {title:'AICTE EOA Report 2024–25',href:'/uploads/2025/10/AICTE-EOA-REPORT-2024-2025.pdf'},
-    {title:'Mandatory Disclosure 2025',href:'/uploads/2025/10/Mandatory-Disclosure-2025-SPSMBA.pdf'},
-    {title:'Affiliation Letter 2026–27 (MBA)',href:'/pdf/Affiliation%20Letter%202026-27%20MBA.pdf'},
-    {title:'MCA SPPU Affiliation 2026–27',href:'/pdf/MCA%20SPPU%20Affiliation%202026-27.pdf'},
-    {title:'MCA Government Resolution (GR)',href:'/pdf/MCA%20GR%20202606121800073408.pdf'},
-    {title:'AICTE EOA Report 2026–27',href:'/pdf/EOA%20Report%2026-27.PDF'},
     {title:'Research Centre',href:'/pdf/Research%20Centre.pdf'}
   ]},
   {category:'Admissions',items:[
-    {title:'Admission Notification 2026–27 (ACAP Seats)',href:'/uploads/2026/09/Admission-Notification-2026-27-ACAP-Seats.pdf'},
-    {title:'Final Merit List 2025–26',href:'/uploads/2025/09/Final-Merit-List-2025-26.pdf'},
-    {title:'Admission Notification — Lateral Entry 2025–26',href:'https://sandybrown-porcupine-672664.hostingersite.com/wp-content/uploads/2025/08/Admission_Notiifcation_Lateral_Entry_2025-26.pdf'},
-    {title:'MBA Merit List',href:'/pdf/MBA%20merit%20list.pdf'},
-    {title:'MCA Merit List',href:'/pdf/MCA%20merit%20list.pdf'}
+    {title:'Admission Notification 2026–27 (ACAP Seats)',href:'/uploads/2026/09/Admission-Notification-2026-27-ACAP-Seats.pdf',year:'2026–27',kind:'notification'},
+    {title:'MBA Merit List 2026–27',href:'/pdf/MBA%20merit%20list.pdf',year:'2026–27',kind:'merit'},
+    {title:'MCA Merit List 2026–27',href:'/pdf/MCA%20merit%20list.pdf',year:'2026–27',kind:'merit'},
+    {title:'Final Merit List 2025–26',href:'/uploads/2025/09/Final-Merit-List-2025-26.pdf',year:'2025–26',kind:'merit'},
+    {title:'Admission Notification — Lateral Entry 2025–26',href:'https://sandybrown-porcupine-672664.hostingersite.com/wp-content/uploads/2025/08/Admission_Notiifcation_Lateral_Entry_2025-26.pdf',year:'2025–26',kind:'notification'}
   ]},
   {category:'Fees',items:[
-    {title:'FRA Fees 2025–26',href:'/uploads/2025/12/FRA-FEE-2025-26.pdf'},
-    {title:'Ad-hoc Fees 2024–25',href:'/uploads/2025/10/Ad-hoc-2024-25.pdf'}
+    {title:'FRA Fees 2025–26',href:'/uploads/2025/12/FRA-FEE-2025-26.pdf',year:'2025–26'},
+    {title:'Ad-hoc Fees 2024–25',href:'/uploads/2025/10/Ad-hoc-2024-25.pdf',year:'2024–25'}
   ]},
   {category:'IQAC',items:[
-    {title:'IQAC 2024–25',href:'/uploads/2025/03/IQAC-2024-25.pdf'},
-    {title:'IQAC 2025–26',href:'/uploads/2025/10/IQAC.pdf'}
+    {title:'IQAC 2025–26',href:'/uploads/2025/10/IQAC.pdf',year:'2025–26'},
+    {title:'IQAC 2024–25',href:'/uploads/2025/03/IQAC-2024-25.pdf',year:'2024–25'}
   ]},
   {category:'Committees 2025–26',items:[
     {title:'Anti-Ragging Committee',href:'/uploads/2025/10/Anti-Ragging-Committee-2025-26.pdf'},

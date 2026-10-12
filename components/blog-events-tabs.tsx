@@ -5,7 +5,7 @@ export type BlogCard={key:string;image:string|null;title:string;date:string|null
 
 export function BlogEventsTabs({news,events}:{news:BlogCard[];events:BlogCard[]}){
   const tabs=[{label:'News',href:'/news',items:news},{label:'Events',href:'/events',items:events}];
-  const[active,setActive]=useState(0);
+  const[active,setActive]=useState(news.length===0&&events.length>0?1:0);
   const tab=tabs[active];
 
   return <div>
