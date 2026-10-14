@@ -148,15 +148,6 @@ export const documents:{category:string;items:DocItem[]}[]=[
   ]}
 ];
 
-// Course-wise fees approved by the Fees Regulating Authority, shown on /fees in
-// English and Marathi as required by section 14(4) of the 2015 Act.
-// MBA: FRA portal, institute MB5521, meeting 13-06-2025. MCA: FRA 28th meeting
-// (27–28 July 2026), ad-hoc fee for new courses — no tuition/development split.
-export const feeSchedule={year:'2026–27',rows:[
-  {course:'MBA',courseMr:'एम.बी.ए.',tuition:85585,development:9415,total:95000,note:'No upward revision',noteMr:'शुल्कवाढ नाही'},
-  {course:'MCA',courseMr:'एम.सी.ए.',total:90000,note:'Ad-hoc fee (new course)',noteMr:'तदर्थ शुल्क (नवीन अभ्यासक्रम)'}
-] as {course:string;courseMr:string;tuition?:number;development?:number;total:number;note:string;noteMr:string}[]};
-
 export const cdcMembers=[
   {name:'Dr. Sanjay Omkarnath Malpani',role:'Chairman'},
   {name:'Dr. Rajendra Shankarlal Laddha',role:'Secretary'},
