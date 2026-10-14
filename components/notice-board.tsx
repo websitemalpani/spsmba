@@ -4,7 +4,7 @@ import {useState} from 'react';import Link from 'next/link';import {ArrowUpRight
 export function NoticeBoard({documentGroups}:{documentGroups:DocGroup[]}){
   const byCategory=(cat:string)=>documentGroups.find(d=>d.category.startsWith(cat))?.items??[];
   const tabs=[
-    {label:'Notices & Circulars',accent:'text-navy',bar:'bg-navy',items:[...byCategory('Committees').slice(0,3),...byCategory('IQAC')]},
+    {label:'Circulars',accent:'text-navy',bar:'bg-navy',items:[...byCategory('Committees').slice(0,3),...byCategory('IQAC')]},
     {label:'Admissions',accent:'text-blue',bar:'bg-blue',items:byCategory('Admissions')},
     {label:'Fees',accent:'text-ember',bar:'bg-ember',items:byCategory('Fees')},
     {label:'Approvals',accent:'text-maroon',bar:'bg-maroon',items:byCategory('Approvals & Affiliation').slice(0,5)}
@@ -25,7 +25,7 @@ export function NoticeBoard({documentGroups}:{documentGroups:DocGroup[]}){
       </a>)}
     </div>
     <div className="flex justify-end border-t border-slate-100 px-5 py-4 sm:px-6">
-      <Link href="/notices" className="focus-ring flex items-center gap-2 text-[12px] font-extrabold text-navy">View all notices <ArrowUpRight size={14}/></Link>
+      <Link href="/notices" className="focus-ring flex items-center gap-2 text-[12px] font-extrabold text-navy">View all circulars &amp; documents <ArrowUpRight size={14}/></Link>
     </div>
   </div>;
 }

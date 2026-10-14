@@ -3,8 +3,7 @@ export const nav:NavLink[]=[
   {label:'Home',href:'/'},
   {label:'About',href:'/about',children:[
     {label:'About us',href:'/about'},
-    {label:"Chairman's message",href:'/about#chairman'},
-    {label:"Director's message",href:'/about#director'},
+    {label:"Chairman & Director's message",href:'/about#leadership'},
     {label:'Campus & facilities',href:'/campus/facilities'},
     {label:'College Development Committee',href:'/committees/college-development-committee'}
   ]},
@@ -24,10 +23,18 @@ export const nav:NavLink[]=[
   {label:'Placements',href:'/placements'},
   {label:'Students',href:'/students',children:[
     {label:'Student corner',href:'/students'},
-    {label:'Gallery',href:'/gallery'},
     {label:'Anti-ragging',href:'/committees/anti-ragging'}
   ]},
-  {label:'Notices',href:'/notices'},
+  {label:'Gallery',href:'/gallery'},
+  // Anchors match the section ids on /notices (see noticeSectionId in lib/api.ts).
+  {label:'Circulars & Documents',href:'/notices',children:[
+    {label:'All circulars & documents',href:'/notices'},
+    {label:'Approvals & Affiliation',href:'/notices#approvals-and-affiliation'},
+    {label:'Admissions',href:'/notices#admissions'},
+    {label:'Fees',href:'/notices#fees'},
+    {label:'IQAC',href:'/notices#iqac'},
+    {label:'Committees',href:'/notices#committees'}
+  ]},
   {label:'Contact',href:'/contact'}
 ];
 
@@ -36,7 +43,7 @@ export const quickLinks=[
   {label:'Merit List',href:'/admissions#lists'},
   {label:'Fee Structure',href:'/fees'},
   {label:'Approval & Affiliation',href:'/approvals'},
-  {label:'Notices',href:'/notices'},
+  {label:'Circulars & Documents',href:'/notices'},
   {label:'IQAC',href:'/iqac'},
   {label:'Students',href:'/students'},
   {label:'Faculty',href:'/faculty'},
@@ -49,8 +56,8 @@ export const quickLinks=[
 export const specializations=[['Marketing Management','Build brands, understand markets and create customer value.'],['Financial Management','Develop analytical judgement for financial decisions.'],['Human Resource Management','Lead people, culture and organisational performance.'],['Operations & Supply Chain','Design resilient systems from sourcing to delivery.'],['Business Analytics','Turn business data into clear, confident decisions.']];
 
 export const facilities=[
-  {title:'ICT Facilities',text:'High-speed internet connectivity across classrooms, library and common areas. Computer labs run industry-standard software including SPSS, R and AI/BI tools, and a campus-wide Wi-Fi network gives students access to e-books, journals and databases through the LMS.',tag:'Connected campus',photos:['/images/infra/infra-1.webp','/images/infra/infra-2.webp','/images/infra/infra-3.webp','/images/infra/infra-4.webp','/images/infra/infra-5.webp','/images/infra/infra-6.webp','/images/infra/infra-7.webp','/images/infra/infra-8.webp','/images/infra/infra-9.webp','/images/infra/infra-10.webp']},
-  {title:'Library',text:'A full-fledged library with more than 10,000 volumes of text and reference books, periodicals and daily newspapers, open access reference sections, and a reading room with proper ventilation and cooling.',tag:'10,000+ volumes',photos:['/images/library/library-1.webp','/images/library/library-2.webp','/images/library/library-3.webp','/images/library/library-4.webp']},
+  {title:'MBA-MCA Campus',text:'The MBA and MCA programmes are housed together on the Sangamner College campus at Ghulewadi, on the Pune–Nashik Highway (NH-50). The building brings classrooms, computer labs and study spaces under one roof, with Wi-Fi connectivity throughout — a focused, modern setting for postgraduate management and computer applications education.',tag:'One campus, two programmes',photos:['/images/infra/infra-1.webp','/images/infra/infra-2.webp','/images/infra/infra-3.webp','/images/infra/infra-4.webp','/images/infra/infra-5.webp','/images/infra/infra-6.webp','/images/infra/infra-7.webp','/images/infra/infra-8.webp','/images/infra/infra-9.webp','/images/infra/infra-10.webp']},
+  {title:'Library',text:'A full-fledged library with more than 10,000 volumes of text and reference books, periodicals and daily newspapers, open access reference sections, and a reading room with proper ventilation and cooling.',tag:'10,000+ volumes',photos:['/images/library/library-1.webp','/images/library/library-2.webp','/images/library/library-3.webp']},
   {title:'Computer Labs',text:'A fully air-conditioned, well-equipped computer laboratory with multiple terminals at the latest configurations, modern software, laser printers and e-training modules.',tag:'Hands-on learning',photos:['/images/computer-labs/computer-labs-1.webp','/images/computer-labs/computer-labs-2.webp','/images/computer-labs/computer-labs-3.webp']},
   {title:'Classrooms',text:'Spacious, well-lit and ventilated classrooms equipped with modern teaching aids, designed to support interactive and engaging classroom sessions.',tag:'Modern learning spaces',photos:['/images/classroom/classroom-1.webp','/images/classroom/classroom-2.webp']},
   {title:'Canteen',text:'A hygienic, spacious canteen on campus serving nutritious meals, snacks and refreshments — a place for students and faculty to unwind between classes.',tag:'Campus dining',photos:['/images/canteen/canteen-1.webp','/images/canteen/canteen-2.webp']},
@@ -103,7 +110,6 @@ export const documents:{category:string;items:DocItem[]}[]=[
     {title:'AICTE EOA Report 2026–27',href:'/pdf/EOA%20Report%2026-27.PDF',year:'2026–27'},
     {title:'SPPU Affiliation Approval Letter 2025–26',href:'/uploads/2025/10/SPPU-Affliation-Approval-Letter-2025-26.pdf',year:'2025–26'},
     {title:'Mandatory Disclosure 2025',href:'/uploads/2025/10/Mandatory-Disclosure-2025-SPSMBA.pdf',year:'2025–26'},
-    {title:'AICTE EOA Report 2024–25',href:'/uploads/2025/10/AICTE-EOA-REPORT-2024-2025.pdf',year:'2024–25'},
     {title:'AICTE Permission Letter',href:'/uploads/2024/02/AICTE-Permission-Letter.pdf'},
     {title:'DTE Permission Letter',href:'/uploads/2024/02/DTE-permission-Letter.pdf'},
     {title:'Government of Maharashtra Permission Letter',href:'/uploads/2024/02/MBA-Goverment-of-Maharashtra-Permission-Letter.pdf'},
@@ -117,12 +123,12 @@ export const documents:{category:string;items:DocItem[]}[]=[
     {title:'Admission Notification — Lateral Entry 2025–26',href:'https://sandybrown-porcupine-672664.hostingersite.com/wp-content/uploads/2025/08/Admission_Notiifcation_Lateral_Entry_2025-26.pdf',year:'2025–26',kind:'notification'}
   ]},
   {category:'Fees',items:[
+    {title:'FRA Approved Fees 2026–27 (MBA)',href:'/pdf/FRA%20Fees%202026-27%20MBA.pdf',year:'2026–27'},
+    {title:'Ad-hoc Fees 2026–27 (MCA) — FRA Order',href:'/pdf/Adhoc%20Fees%202026-27%20MCA.pdf',year:'2026–27'},
     {title:'FRA Fees 2025–26',href:'/uploads/2025/12/FRA-FEE-2025-26.pdf',year:'2025–26'},
-    {title:'Ad-hoc Fees 2024–25',href:'/uploads/2025/10/Ad-hoc-2024-25.pdf',year:'2024–25'}
   ]},
   {category:'IQAC',items:[
     {title:'IQAC 2025–26',href:'/uploads/2025/10/IQAC.pdf',year:'2025–26'},
-    {title:'IQAC 2024–25',href:'/uploads/2025/03/IQAC-2024-25.pdf',year:'2024–25'}
   ]},
   {category:'Committees 2025–26',items:[
     {title:'Anti-Ragging Committee',href:'/uploads/2025/10/Anti-Ragging-Committee-2025-26.pdf'},
@@ -141,6 +147,15 @@ export const documents:{category:string;items:DocItem[]}[]=[
     {title:'Internal Innovation Council (IIC)',href:'/uploads/2025/10/IIC.pdf'}
   ]}
 ];
+
+// Course-wise fees approved by the Fees Regulating Authority, shown on /fees in
+// English and Marathi as required by section 14(4) of the 2015 Act.
+// MBA: FRA portal, institute MB5521, meeting 13-06-2025. MCA: FRA 28th meeting
+// (27–28 July 2026), ad-hoc fee for new courses — no tuition/development split.
+export const feeSchedule={year:'2026–27',rows:[
+  {course:'MBA',courseMr:'एम.बी.ए.',tuition:85585,development:9415,total:95000,note:'No upward revision',noteMr:'शुल्कवाढ नाही'},
+  {course:'MCA',courseMr:'एम.सी.ए.',total:90000,note:'Ad-hoc fee (new course)',noteMr:'तदर्थ शुल्क (नवीन अभ्यासक्रम)'}
+] as {course:string;courseMr:string;tuition?:number;development?:number;total:number;note:string;noteMr:string}[]};
 
 export const cdcMembers=[
   {name:'Dr. Sanjay Omkarnath Malpani',role:'Chairman'},

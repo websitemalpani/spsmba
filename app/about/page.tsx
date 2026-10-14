@@ -8,7 +8,7 @@ export default async function About(){const a=await getAboutPage();return <main>
 
 <section id="vision" className="bg-gold py-24"><div className="mx-auto grid max-w-7xl gap-10 px-5 lg:grid-cols-2"><div><p className="eyebrow !text-navy/50">Vision statement</p><h2 className="display mt-4 text-5xl text-navy">&ldquo;Spread Knowledge Unto the Last&rdquo;</h2></div><p className="text-sm leading-8 text-navy/70">{a?.visionBody}</p></div></section>
 
-<section className="mx-auto max-w-7xl space-y-24 px-5 py-24">{leadersFrom(a).map(l=><LeaderMessage key={l.id} leader={l}/>)}</section>
+<section id="leadership" className="mx-auto max-w-7xl scroll-mt-40 px-5 py-24"><p className="eyebrow">Leadership</p><h2 className="display mt-4 text-4xl text-navy">Message from the Chairman &amp; Director.</h2><div className="mt-14 space-y-20 divide-y divide-slate-200 [&>*+*]:pt-20">{leadersFrom(a).map(l=><LeaderMessage key={l.id} leader={l}/>)}</div></section>
 
 <section className="bg-mist py-16"><div className="mx-auto max-w-7xl px-5 text-center"><p className="text-xs text-slate-500">{a?.approvalsNote}</p></div></section>
 </main>}

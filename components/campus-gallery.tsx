@@ -1,8 +1,8 @@
 'use client';
-import Image from 'next/image';import {motion} from 'framer-motion';import {ArrowLeft,ArrowRight,BookOpen,Dumbbell,Monitor,Wifi} from 'lucide-react';import {useRef} from 'react';
+import Image from 'next/image';import {motion} from 'framer-motion';import {ArrowLeft,ArrowRight,BookOpen,Building2,Dumbbell,Monitor,Wifi} from 'lucide-react';import {useRef} from 'react';
 
 const FACILITY_VISUALS:Record<string,{Icon:typeof Wifi;tint:string}>={
-  'ICT Facilities':{Icon:Wifi,tint:'from-blue to-navy'},
+  'MBA-MCA Campus':{Icon:Building2,tint:'from-blue to-navy'},
   'Library':{Icon:BookOpen,tint:'from-ember to-gold'},
   'Computer Labs':{Icon:Monitor,tint:'from-navy to-blue'},
   'Sports & Wellness':{Icon:Dumbbell,tint:'from-maroon to-ember'}

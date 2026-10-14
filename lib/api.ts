@@ -41,8 +41,7 @@ const FOOTER_GROUPS: FooterGroup[] = [
     items: [
       { label: 'About us', href: '/about' },
       { label: 'Vision & mission', href: '/about#vision' },
-      { label: "Chairman's message", href: '/about#chairman' },
-      { label: "Director's message", href: '/about#director' },
+      { label: "Chairman & Director's message", href: '/about#leadership' },
       { label: 'Approval & Affiliation', href: '/approvals' },
       { label: 'College Development Committee', href: '/committees/college-development-committee' },
       { label: 'Contact', href: '/contact' },
@@ -64,7 +63,7 @@ const FOOTER_GROUPS: FooterGroup[] = [
       { label: 'Admission process', href: '/admissions#process' },
       { label: 'Merit list & admission list', href: '/admissions#lists' },
       { label: 'Fees', href: '/fees' },
-      { label: 'Notices', href: '/notices' },
+      { label: 'Circulars & Documents', href: '/notices' },
     ],
   },
   {
@@ -204,6 +203,11 @@ const DOCUMENT_CATEGORY_MAP: Record<string, string> = {
   IQAC: 'IQAC',
   'Committees 2025–26': 'Committees',
 };
+
+// Section anchor for a notice group, without its academic year (e.g. "Committees 2025–26" -> "committees").
+export function noticeSectionId(category: string): string {
+  return slugify(category.replace(/\s*\d{4}.\d{2,4}$/, ''));
+}
 
 export async function getDocumentsGrouped(): Promise<DocGroup[]> {
   const groups = new Map<string, DocGroup>();
@@ -393,14 +397,14 @@ const ABOUT_PAGE: AboutPage = {
   chairmanQuote:
     'Our institution believes in bringing about changes that are a need of the time but also cherishes eternal values.',
   chairmanBody:
-    "Human resources are the real wealth of this institution. We advocate experiential learning that goes beyond the classroom walls to build every student's confidence for the world of business.",
+    "Human resources are the real wealth of this institution. We advocate experiential learning that goes beyond the classroom walls to build every student's confidence for the world of business.\n\nSince 1960, Shikshan Prasarak Sanstha has worked to bring quality higher education within reach of students from Sangamner and the surrounding rural region. Our MBA and MCA programmes carry that mission forward into management and technology — the fields where opportunity is growing fastest.\n\nWe believe education must stay rooted in values while keeping pace with a changing world. Guided by the principle \"Think globally, act locally\", we want our students to graduate with sound knowledge, practical skills and the integrity to lead with responsibility.\n\nI welcome you to the SPS MBA Institute and wish every student a rewarding and successful journey with us.",
   chairmanName: 'Dr. Sanjay Malpani',
   chairmanTitle: 'Chairman, Shikshan Prasarak Sanstha',
   chairmanPhoto: '/uploads/2024/01/dr.-sanjay-malpani.jpg',
-  // Director's message text is still to be supplied by the institute; the
-  // section stays hidden until `directorBody` is filled in.
-  directorQuote: null,
-  directorBody: null,
+  directorQuote:
+    'Our aim is simple: to shape every student into a confident, capable and employable professional.',
+  directorBody:
+    "Welcome to Shikshan Prasarak Sanstha's M.B.A. Institute, Sangamner. Our MBA and MCA programmes, affiliated to Savitribai Phule Pune University, combine strong academic foundations with real-world exposure.\n\nLearning here extends well beyond lectures. Case studies, presentations, group discussions, industrial visits, internships, live projects and guest lectures help students connect theory with practice, while the five MBA specialisations and the MCA curriculum let each student build depth in the area that suits their ambitions.\n\nOur faculty mentor students closely, and the placement cell supports them through résumé workshops, mock interviews and personality development — preparing them for the expectations of industry from day one.\n\nI invite you to join us and make the most of every opportunity this campus offers.",
   directorName: 'Dr. Nitin R. Zaware',
   directorTitle: 'Director',
   directorPhoto: '/uploads/2025/07/8fd38ab3-f8c8-401c-82b2-71d508883fce-300x300.webp',

@@ -1,11 +1,11 @@
-import {HomeHeroSlider} from '@/components/home-hero-slider';import {CampusGallery} from '@/components/campus-gallery';import {NoticeBoard} from '@/components/notice-board';import {HomepagePopupModal} from '@/components/homepage-popup';import {BlogEventsTabs} from '@/components/blog-events-tabs';import {CountUp} from '@/components/count-up';import {Sunburst} from '@/components/sunburst';import {Reveal} from '@/components/reveal';import {LeaderMessage,leadersFrom} from '@/components/leader-messages';import {getSpecializations,getFacilities,getDocumentsGrouped,getHomepageSections,getHomepagePopup,getQuickLinks,getNews,getEvents,getAboutPage,mediaUrl} from '@/lib/api';import Link from 'next/link';import {ArrowUpRight,BookOpen,Briefcase,Code2,Dumbbell,Landmark,Layers,Monitor,ShieldCheck,Users,Wifi} from 'lucide-react';
-const facilityIcons=[Wifi,BookOpen,Monitor,Dumbbell];
+import {HomeHeroSlider} from '@/components/home-hero-slider';import {CampusGallery} from '@/components/campus-gallery';import {NoticeBoard} from '@/components/notice-board';import {HomepagePopupModal} from '@/components/homepage-popup';import {BlogEventsTabs} from '@/components/blog-events-tabs';import {CountUp} from '@/components/count-up';import {Sunburst} from '@/components/sunburst';import {Reveal} from '@/components/reveal';import {LeaderMessage,leadersFrom} from '@/components/leader-messages';import {getSpecializations,getFacilities,getDocumentsGrouped,getHomepageSections,getHomepagePopup,getQuickLinks,getNews,getEvents,getAboutPage,mediaUrl} from '@/lib/api';import Link from 'next/link';import {ArrowUpRight,BookOpen,Briefcase,Building2,Code2,Dumbbell,Landmark,Layers,Monitor,ShieldCheck,Users} from 'lucide-react';
+const facilityIcons=[Building2,BookOpen,Monitor,Dumbbell];
 const why=[['Six decades of access','Rooted in Shikshan Prasarak Sanstha’s 1960 mission to bring rigorous education to rural Maharashtra.'],['Recognised, regulated','Affiliated to Savitribai Phule Pune University, Pune and approved by AICTE, New Delhi, DTE, MH and Govt. of Maharashtra.'],['Five ways to specialise','Marketing, Finance, HR, Operations & Supply Chain or Business Analytics — shape the MBA around your ambition.'],['Faculty who mentor','Ph.D.-qualified teachers with real industry grounding, guiding every cohort closely.']];
 const whyMeta=[{Icon:Landmark,accent:'text-navy',bar:'bg-navy'},{Icon:ShieldCheck,accent:'text-blue',bar:'bg-blue'},{Icon:Layers,accent:'text-ember',bar:'bg-ember'},{Icon:Users,accent:'text-maroon',bar:'bg-maroon'}];
 const specAccents=['bg-navy text-white','bg-blue text-white','bg-ember text-white','bg-maroon text-white','bg-gold text-navy'];
-const programmes=[{name:'MBA',full:'Master of Business Administration',copy:'Two-year, full-time · 120 seats · Five specialisations',href:'/academics/mba',Icon:Briefcase,tone:'bg-navy'},{name:'MCA',full:'Master of Computer Applications',copy:'Two-year, full-time · Affiliated to SPPU, Pune',href:'/academics/mca',Icon:Code2,tone:'bg-gradient-to-br from-blue to-navy'}];
+const programmes=[{name:'MBA',full:'Master of Business Administration',copy:'Two-year, full-time · 120 seats · Five specialisations',href:'/academics/mba',Icon:Briefcase,tone:'bg-navy'},{name:'MCA',full:'Master of Computer Applications',copy:'Two-year, full-time · 120 seats',href:'/academics/mca',Icon:Code2,tone:'bg-gradient-to-br from-blue to-navy'}];
 const placementSteps=[['Prepare','Résumé workshops, interview preparation and mock interviews.'],['Experience','Internships, live projects, industrial visits and guest lectures.'],['Grow','Personality development and practical exposure for professional confidence.']];
-export default async function Home(){const[specializations,facilities,documentGroups,homeSections,popup,quickLinks,news,events,about]=await Promise.all([getSpecializations(),getFacilities(),getDocumentsGrouped(),getHomepageSections(),getHomepagePopup(),getQuickLinks(),getNews(3),getEvents(3),getAboutPage()]);const leaders=leadersFrom(about);const[ict,library,labs,sports]=facilities;const[Ict,Book,Lab,Sport]=facilityIcons;const hasFacilityShowcase=facilities.length>=4;
+export default async function Home(){const[specializations,facilities,documentGroups,homeSections,popup,quickLinks,news,events,about]=await Promise.all([getSpecializations(),getFacilities(),getDocumentsGrouped(),getHomepageSections(),getHomepagePopup(),getQuickLinks(),getNews(3),getEvents(3),getAboutPage()]);const leaders=leadersFrom(about).filter(l=>l.id==='chairman');const[ict,library,labs,sports]=facilities;const[Ict,Book,Lab,Sport]=facilityIcons;const hasFacilityShowcase=facilities.length>=4;
 const slides=homeSections.heroSlides.map(s=>({image:mediaUrl(s.image)||'',eyebrow:s.eyebrow,title:s.title,accent:s.accent,copy:s.copy,primary:s.buttonLabel,href:s.buttonHref})).filter(s=>s.image);
 const campusPhotos=homeSections.photoCaptions.map(p=>({src:mediaUrl(p.image)||'',caption:p.caption})).filter(p=>p.src);
 const newsCards=news.map(n=>({key:n.slug,image:mediaUrl(n.coverImage),title:n.title,date:n.publishedDate?new Date(n.publishedDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):null,excerpt:n.summary}));
@@ -29,7 +29,7 @@ return <main className="bg-paper">
 </div></section>
 
 <section className="mx-auto max-w-[1320px] px-5 pt-10 pb-6 sm:px-6">
-  <Reveal><p className="eyebrow !text-gold">Stay updated</p><h2 className="display mt-4 text-3xl font-medium text-navy">Notices &amp; announcements.</h2></Reveal>
+  <Reveal><p className="eyebrow !text-gold">Stay updated</p><h2 className="display mt-4 text-3xl font-medium text-navy">Circulars &amp; documents.</h2></Reveal>
   <Reveal delay={.08} className="mt-6"><NoticeBoard documentGroups={documentGroups}/></Reveal>
 </section>
 
@@ -46,8 +46,8 @@ return <main className="bg-paper">
 </Reveal></section>
 
 {leaders.length>0&&<section className="bg-mist py-16"><div className="mx-auto max-w-[1320px] px-5 sm:px-6">
-  <Reveal><p className="eyebrow !text-gold">Leadership</p><h2 className="display mt-4 text-3xl font-medium text-navy sm:text-4xl">Messages from our leadership.</h2></Reveal>
-  <div className={`mt-9 grid gap-5 ${leaders.length>1?'lg:grid-cols-2':''}`}>{leaders.map((l,i)=><Reveal delay={i*.06} key={l.id}><LeaderMessage leader={l} compact/></Reveal>)}</div>
+  <Reveal><p className="eyebrow !text-gold">Leadership</p><h2 className="display mt-4 text-3xl font-medium text-navy sm:text-4xl">Message from the Chairman.</h2></Reveal>
+  <div className={`mt-9 grid gap-px overflow-hidden bg-slate-200 ${leaders.length>1?'lg:grid-cols-2':''}`}>{leaders.map((l,i)=><Reveal delay={i*.06} key={l.id}><LeaderMessage leader={l} compact/></Reveal>)}</div>
 </div></section>}
 
 <hr className="mx-auto max-w-[1320px] border-slate-200"/>
@@ -105,7 +105,7 @@ return <main className="bg-paper">
     </Reveal>
     <Reveal delay={.1} className="flex flex-col justify-between gap-6 border border-blue/15 bg-blue/5 p-7 transition-transform hover:-translate-y-1 lg:col-start-2 lg:row-start-1">
       <div className="flex items-start justify-between"><Ict size={24} className="text-blue" strokeWidth={1.6}/><span className="text-[11px] font-bold text-slate-300">02</span></div>
-      <div><h3 className="display text-lg font-semibold text-navy">{ict.title}</h3><p className="mt-1.5 text-xs leading-6 text-slate-500">Campus-wide Wi-Fi, e-resources and an LMS with access to journals and databases.</p><div className="mt-3 flex flex-wrap gap-1.5">{['SPSS','R','AI/BI'].map(t=><span key={t} className="bg-blue/10 px-2 py-1 text-[10px] font-bold text-blue">{t}</span>)}</div></div>
+      <div><h3 className="display text-lg font-semibold text-navy">{ict.title}</h3><p className="mt-1.5 text-xs leading-6 text-slate-500">MBA and MCA together under one roof on the Sangamner College campus, Ghulewadi.</p><div className="mt-3 flex flex-wrap gap-1.5">{['MBA','MCA'].map(t=><span key={t} className="bg-blue/10 px-2 py-1 text-[10px] font-bold text-blue">{t}</span>)}</div></div>
     </Reveal>
     <Reveal delay={.15} className="flex flex-col justify-between gap-6 border border-ember/15 bg-ember/5 p-7 transition-transform hover:-translate-y-1 lg:col-start-3 lg:row-start-1">
       <div className="flex items-start justify-between"><Lab size={24} className="text-ember" strokeWidth={1.6}/><span className="text-[11px] font-bold text-slate-300">03</span></div>
